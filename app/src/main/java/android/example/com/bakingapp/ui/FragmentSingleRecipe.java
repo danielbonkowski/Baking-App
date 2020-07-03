@@ -1,5 +1,6 @@
 package android.example.com.bakingapp.ui;
 
+import android.content.Context;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.databinding.FragmentSingleRecipeStepsBinding;
 import android.example.com.bakingapp.model.Recipe;
@@ -18,16 +19,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class FragmentSingleRecipe extends Fragment implements SingleRecipeAdapter.OnStepListener {
 
-    Recipe mRecipe;
-    OnStepClickListener mOnStepClickListener;
+    private Recipe mRecipe;
+    private OnStepClickListener mCallback;
 
     public interface OnStepClickListener{
-        void onStepClick(Step step);
+        void onStepClick(int position, Recipe recipe);
     }
 
 
-    public FragmentSingleRecipe(OnStepClickListener onStepClickListener) {
-        mOnStepClickListener = onStepClickListener;
+    public FragmentSingleRecipe() {
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (OnStepClickListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement OnRecipeClickListener");
+        }
     }
 
     @Nullable
@@ -61,6 +73,6 @@ public class FragmentSingleRecipe extends Fragment implements SingleRecipeAdapte
 
     @Override
     public void onStepClick(int position) {
-        mOnStepClickListener.onStepClick(mRecipe.getSteps().get(position));
+        mCallback.onStepClick(position, mRecipe);
     }
 }

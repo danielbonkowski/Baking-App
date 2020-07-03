@@ -56,6 +56,8 @@ public class NetworkUtils {
                     }
                     for(Step step: recipe.getSteps()){
                         Log.d(TAG, "Step: " + step.getDescription());
+                        Log.d(TAG, "Step VideoUrl: " + step.getVideoUrl());
+
                     }
                     Log.d(TAG, "Servings: " + String.valueOf(recipe.getServings()));
                     Log.d(TAG, "Image: " + recipe.getImage());

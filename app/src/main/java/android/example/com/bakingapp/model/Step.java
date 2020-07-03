@@ -1,5 +1,7 @@
 package android.example.com.bakingapp.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Step implements Serializable {
@@ -7,7 +9,9 @@ public class Step implements Serializable {
     private int id;
     private String shortDescription;
     private String description;
+    @SerializedName("videoURL")
     private String videoUrl;
+    @SerializedName("thumbnailURL")
     private String thumbnailUrl;
 
     public Step(int id, String shortDescription, String description, String videoUrl, String thumbnailUrl) {

@@ -21,7 +21,7 @@ import java.util.List;
 public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.OnRecipeListener {
 
     private List<Recipe> mRecipes;
-    OnRecipeClickListener mCallback;
+    private OnRecipeClickListener mCallback;
 
     public interface OnRecipeClickListener{
         void onRecipeSelected(Recipe recipe);
