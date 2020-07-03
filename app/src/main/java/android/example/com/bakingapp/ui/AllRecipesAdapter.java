@@ -14,14 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesViewHolder> {
+public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.RecipesViewHolder> {
 
-    private static final String TAG = RecipesAdapter.class.getSimpleName();
+    private static final String TAG = AllRecipesAdapter.class.getSimpleName();
 
     List<Recipe> mRecipes;
     Context mContext;
+    private OnRecipeListener mOnRecipeListener;
 
-    public interface onRecipeListener{
+    public interface OnRecipeListener {
         void onRecipeClick(int position);
     };
 
@@ -34,9 +35,10 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
         notifyDataSetChanged();
     }
 
-    public RecipesAdapter(Context context){
+    public AllRecipesAdapter(Context context, OnRecipeListener onRecipeListener){
         mRecipes = NetworkUtils.getmRecipes();
         mContext = context;
+        mOnRecipeListener = onRecipeListener;
     }
 
     @NonNull
@@ -60,7 +62,7 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
         return mRecipes.size();
     }
 
-    public class RecipesViewHolder extends RecyclerView.ViewHolder {
+    public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView recipeName;
         public TextView ingredients;
@@ -69,6 +71,13 @@ public class RecipesAdapter extends RecyclerView.Adapter<RecipesAdapter.RecipesV
             super(itemView);
             recipeName = itemView.findViewById(R.id.recipes_item_recipe_name);
             ingredients = itemView.findViewById(R.id.recipes_item_recipe_ingredients);
+
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            mOnRecipeListener.onRecipeClick(getAdapterPosition());
         }
     }
 }

@@ -17,6 +17,7 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    private static final String RECIPE_LISTING_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
     private static List<Recipe> mRecipes;
 
     public static List<Recipe> getmRecipes() {
@@ -28,7 +29,7 @@ public class NetworkUtils {
         final List<Recipe>[] recipes = new List[]{null};
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/")
+                .baseUrl(RECIPE_LISTING_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

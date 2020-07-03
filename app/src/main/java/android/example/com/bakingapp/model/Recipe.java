@@ -1,15 +1,20 @@
 package android.example.com.bakingapp.model;
 
-public class Recipe {
+import android.os.Parcel;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class Recipe implements Serializable {
 
     private int id;
     private String name;
-    private Ingredient[] ingredients;
-    private Step[] steps;
+    private List<Ingredient> ingredients;
+    private List<Step> steps;
     private int servings;
     private String image;
 
-    public Recipe(int id, String name, Ingredient[] ingredients, Step[] steps, int servings, String image) {
+    public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -26,11 +31,11 @@ public class Recipe {
         return name;
     }
 
-    public Ingredient[] getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public Step[] getSteps() {
+    public List<Step> getSteps() {
         return steps;
     }
 
@@ -46,14 +51,15 @@ public class Recipe {
         String ingredientsString = "";
         if(ingredients != null){
 
-            for(int i = 0; i < ingredients.length; i++){
-                ingredientsString += ingredients[i].getName();
+            for(int i = 0; i < ingredients.size(); i++){
+                ingredientsString += ingredients.get(i).getName();
 
-                if(i != ingredients.length - 1) {
+                if(i != ingredients.size() - 1) {
                     ingredientsString += ", ";
                 }
             }
         }
         return ingredientsString;
     }
+
 }

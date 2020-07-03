@@ -1,15 +1,13 @@
 package android.example.com.bakingapp.ui;
 
-import android.content.Intent;
+import android.content.Context;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.databinding.FragmentRecipesBinding;
 import android.example.com.bakingapp.model.Recipe;
-import android.example.com.bakingapp.network.NetworkUtils;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,39 +18,51 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class FragmentRecipes extends Fragment implements RecipesAdapter.onRecipeListener{
+public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.OnRecipeListener {
 
     private List<Recipe> mRecipes;
-    private int mIndex;
+    OnRecipeClickListener mCallback;
 
-    public FragmentRecipes(){
+    public interface OnRecipeClickListener{
+        void onRecipeSelected(Recipe recipe);
+    }
+
+    public FragmentAllRecipes(){
+
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        try{
+            mCallback = (OnRecipeClickListener) context;
+        }catch (ClassCastException e){
+            throw new ClassCastException(context.toString() + " must implement OnRecipeClickListener");
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        NetworkUtils.getRecipesFromApi();
+
         FragmentRecipesBinding binding = DataBindingUtil.inflate(inflater,
                 R.layout.fragment_recipes, container, false);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        RecipesAdapter recipesAdapter = new RecipesAdapter(getContext());
+        AllRecipesAdapter allRecipesAdapter = new AllRecipesAdapter(getContext(), this);
 
         binding.recipesRecyclerView.setLayoutManager(layoutManager);
-        binding.recipesRecyclerView.setAdapter(recipesAdapter);
-
-
+        binding.recipesRecyclerView.setAdapter(allRecipesAdapter);
 
         return binding.getRoot();
     }
 
     public void setRecipes(List<Recipe> recipes){mRecipes = recipes;}
-    public void setIndex(int index){mIndex = index;}
 
     @Override
     public void onRecipeClick(int position) {
-        Intent recipeIntent = new Intent(getContext(), SingleRecipeActivity.class);
-        startActivity(recipeIntent);
+        mCallback.onRecipeSelected(mRecipes.get(position));
     }
 }
