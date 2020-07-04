@@ -1,36 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-    <data>
-        <variable
-            name="recipe"
-            type="android.example.com.bakingapp.model.Recipe" />
-    </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <TextView
+        android:id="@+id/recipes_item_recipe_name"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        >
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Nutella Pie"
+        android:text="Recipe name" />
 
-        <TextView
-            android:id="@+id/recipes_item_recipe_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Nutella Pie"
-            android:text="@{recipe.name}" />
+    <TextView
+        android:id="@+id/recipes_item_recipe_ingredients"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ingredients"
+        app:layout_constraintStart_toStartOf="@+id/recipes_item_recipe_name"
+        app:layout_constraintTop_toBottomOf="@+id/recipes_item_recipe_name"
+        tools:text="Graham Cracker crumbs, unsalted butter, melted, granulated sugar, salt, vanilla, Nutella or other chocolate-hazelnut spread, Mascapone Cheese(room temperature), heavy cream(cold), cream cheese(softened)" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:id="@+id/recipes_item_recipe_ingredients"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@{recipe.ingredientsToString}"
-            app:layout_constraintStart_toStartOf="@+id/recipes_item_recipe_name"
-            app:layout_constraintTop_toBottomOf="@+id/recipes_item_recipe_name"
-            tools:text="Graham Cracker crumbs, unsalted butter, melted, granulated sugar, salt, vanilla, Nutella or other chocolate-hazelnut spread, Mascapone Cheese(room temperature), heavy cream(cold), cream cheese(softened)" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

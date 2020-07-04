@@ -2,7 +2,7 @@ package android.example.com.bakingapp.ui;
 
 import android.content.Context;
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.model.Recipe;
+import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SingleRecipeAdapter extends RecyclerView.Adapter<SingleRecipeAdapter.SingleRecipeViewHolder> {
 
     Context mContext;
-    private static Recipe mRecipe;
+    private static SimpleRecipe mSimpleRecipe;
     private OnStepListener mOnStepListener;
 
     public interface OnStepListener {
         void onStepClick(int position);
     }
 
-    public static void setRecipe(Recipe recipe){
-        mRecipe = recipe;
+    public static void setRecipe(SimpleRecipe simpleRecipe){
+        mSimpleRecipe = simpleRecipe;
     }
 
     public SingleRecipeAdapter(Context context, OnStepListener onStepListener) {
@@ -39,13 +39,13 @@ public class SingleRecipeAdapter extends RecyclerView.Adapter<SingleRecipeAdapte
 
     @Override
     public void onBindViewHolder(@NonNull SingleRecipeViewHolder holder, int position) {
-        holder.description.setText(mRecipe.getSteps().get(position).getShortDescription());
+        holder.description.setText(mSimpleRecipe.getSteps().get(position).getShortDescription());
     }
 
     @Override
     public int getItemCount() {
-        if(mRecipe == null) return 0;
-        return mRecipe.getSteps().size();
+        if(mSimpleRecipe == null) return 0;
+        return mSimpleRecipe.getSteps().size();
     }
 
     public class SingleRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

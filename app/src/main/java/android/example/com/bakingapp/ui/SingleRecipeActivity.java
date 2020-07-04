@@ -5,9 +5,8 @@ import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.model.Recipe;
+import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,28 +26,25 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
 
         if(receivedIntent != null){
 
-
-
-
-            Recipe recipe = (Recipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
+            SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
             FragmentSingleRecipe fragmentSingleRecipe = new FragmentSingleRecipe();
-            fragmentSingleRecipe.setRecipe(recipe);
+            fragmentSingleRecipe.setRecipe(simpleRecipe);
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
                     .add(R.id.single_recipe_container, fragmentSingleRecipe)
                     .commit();
 
-            setTitle(recipe.getName());
+            setTitle(simpleRecipe.getName());
         }
     }
 
     @Override
-    public void onStepClick(int position, Recipe recipe) {
-        Toast.makeText(this, "Position clicked: " + recipe.getId(), Toast.LENGTH_SHORT).show();
+    public void onStepClick(int position, SimpleRecipe simpleRecipe) {
+        Toast.makeText(this, "Position clicked: " + simpleRecipe.getId(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable(INTENT_EXTRA_STEP_RECIPE, recipe);
+        bundle.putSerializable(INTENT_EXTRA_STEP_RECIPE, simpleRecipe);
         bundle.putSerializable(INTENT_EXTRA_STEP_POSITION, position);
 
         Intent intent = new Intent(this, StepActivity.class);

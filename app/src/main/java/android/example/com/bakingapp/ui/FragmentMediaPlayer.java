@@ -1,16 +1,14 @@
 package android.example.com.bakingapp.ui;
 
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.databinding.FragmentMediaPlayerBinding;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 public class FragmentMediaPlayer extends Fragment {
@@ -25,12 +23,13 @@ public class FragmentMediaPlayer extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        FragmentMediaPlayerBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_media_player, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_media_player, container, false);
 
-        binding.mediaPlayerTextView.setText(mVideoUrl);
+        TextView textView = (TextView) rootView.findViewById(R.id.media_player_text_view);
 
-        return binding.getRoot();
+        textView.setText(mVideoUrl);
+
+        return rootView;
     }
 
     public void setVideoUrl(String urlString){

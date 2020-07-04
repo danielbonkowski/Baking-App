@@ -2,8 +2,7 @@ package android.example.com.bakingapp.ui;
 
 import android.content.Context;
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.model.Recipe;
-import android.example.com.bakingapp.network.NetworkUtils;
+import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
 
     private static final String TAG = AllRecipesAdapter.class.getSimpleName();
 
-    List<Recipe> mRecipes;
+    List<SimpleRecipe> mSimpleRecipes;
     Context mContext;
     private OnRecipeListener mOnRecipeListener;
 
@@ -26,17 +25,16 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
         void onRecipeClick(int position);
     };
 
-    public List<Recipe> getRecipes(){
-        return mRecipes;
+    public List<SimpleRecipe> getRecipes(){
+        return mSimpleRecipes;
     }
 
-    public void setRecipes(List<Recipe> recipes){
-        mRecipes = recipes;
+    public void setRecipes(List<SimpleRecipe> simpleRecipes){
+        mSimpleRecipes = simpleRecipes;
         notifyDataSetChanged();
     }
 
     public AllRecipesAdapter(Context context, OnRecipeListener onRecipeListener){
-        mRecipes = NetworkUtils.getmRecipes();
         mContext = context;
         mOnRecipeListener = onRecipeListener;
     }
@@ -52,14 +50,14 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
     @Override
     public void onBindViewHolder(@NonNull RecipesViewHolder holder, int position) {
 
-        holder.recipeName.setText(mRecipes.get(position).getName());
-        holder.ingredients.setText(mRecipes.get(position).getIngredientsToString());
+        holder.recipeName.setText(mSimpleRecipes.get(position).getName());
+        holder.ingredients.setText(mSimpleRecipes.get(position).getIngredientsToString());
     }
 
     @Override
     public int getItemCount() {
-        if(mRecipes == null) return 0;
-        return mRecipes.size();
+        if(mSimpleRecipes == null) return 0;
+        return mSimpleRecipes.size();
     }
 
     public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

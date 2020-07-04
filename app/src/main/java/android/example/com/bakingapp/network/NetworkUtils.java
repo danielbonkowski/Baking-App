@@ -1,9 +1,17 @@
 package android.example.com.bakingapp.network;
 
-import android.example.com.bakingapp.model.Ingredient;
-import android.example.com.bakingapp.model.Recipe;
-import android.example.com.bakingapp.model.Step;
+import android.content.Context;
+import android.example.com.bakingapp.listingModel.SimpleRecipe;
+import android.example.com.bakingapp.roomModel.AppDatabase;
+import android.example.com.bakingapp.listingModel.SimpleIngredient;
+import android.example.com.bakingapp.listingModel.SimpleStep;
+import android.example.com.bakingapp.roomModel.Ingredient;
+import android.example.com.bakingapp.roomModel.Recipe;
+import android.example.com.bakingapp.roomModel.Step;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -18,15 +26,12 @@ public class NetworkUtils {
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
     private static final String RECIPE_LISTING_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
-    private static List<Recipe> mRecipes;
+    private static AppDatabase mDb;
 
-    public static List<Recipe> getmRecipes() {
-        return mRecipes;
-    }
 
-    public static void getRecipesFromApi(){
+    public static void getRecipesFromApi(Context context){
 
-        final List<Recipe>[] recipes = new List[]{null};
+        mDb = AppDatabase.getInstance(context);
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(RECIPE_LISTING_URL)
@@ -35,48 +40,58 @@ public class NetworkUtils {
 
         JsonRecipeListingApi jsonRecipeListingApi = retrofit.create(JsonRecipeListingApi.class);
 
-        Call<List<Recipe>> call = jsonRecipeListingApi.getRecipes();
+        Call<List<SimpleRecipe>> call = jsonRecipeListingApi.getRecipes();
 
-        call.enqueue(new Callback<List<Recipe>>() {
+        call.enqueue(new Callback<List<SimpleRecipe>>() {
             @Override
-            public void onResponse(Call<List<Recipe>> call, Response<List<Recipe>> response) {
+            public void onResponse(Call<List<SimpleRecipe>> call, final Response<List<SimpleRecipe>> response) {
 
-                if(!response.isSuccessful()){
-                    Log.d(TAG, "Code: " + response.code());
-                    return;
-                }
+                Log.d(TAG, "Getting API data...");
+                AppExecutors.getInstance().diskIO().execute(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        if(!response.isSuccessful()){
+                            Log.d(TAG, "Code: " + response.code());
+                            return;
+                        }
+
+                        List<SimpleRecipe> mySimpleRecipes = response.body();
+
+                        for(SimpleRecipe simpleRecipe : mySimpleRecipes){
+
+                            LiveData<Recipe> recipeLiveData = mDb.recipeDao().getRecipe(simpleRecipe.getId());
+
+                            if(recipeLiveData == null){
+                                mDb.recipeDao().insertRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
+                                        simpleRecipe.getServings(), simpleRecipe.getImage()));
 
 
-                setRecipes(response.body());
-                List<Recipe> myRecipes = response.body();
-                for(Recipe recipe: myRecipes){
-                    Log.d(TAG, "Recipe name: " + recipe.getName());
-                    for(Ingredient ingredient: recipe.getIngredients()){
-                        Log.d(TAG, "Ingredient: " + ingredient.getName());
+                                for(SimpleIngredient simpleIngredient : simpleRecipe.getIngredients()){
+                                    mDb.recipeDao().insertIngredient(new Ingredient(simpleRecipe.getId(),
+                                            simpleIngredient.getQuantity(), simpleIngredient.getMeasure(),
+                                            simpleIngredient.getName()));
+                                }
+                                for(SimpleStep simpleStep : simpleRecipe.getSteps()){
+                                    mDb.recipeDao().insertStep(new Step(simpleRecipe.getId(),
+                                            simpleStep.getShortDescription(), simpleStep.getDescription(),
+                                            simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
+                                }
+                            }
+                        }
                     }
-                    for(Step step: recipe.getSteps()){
-                        Log.d(TAG, "Step: " + step.getDescription());
-                        Log.d(TAG, "Step VideoUrl: " + step.getVideoUrl());
+                });
 
-                    }
-                    Log.d(TAG, "Servings: " + String.valueOf(recipe.getServings()));
-                    Log.d(TAG, "Image: " + recipe.getImage());
-
-                }
 
             }
 
             @Override
-            public void onFailure(Call<List<Recipe>> call, Throwable t) {
+            public void onFailure(Call<List<SimpleRecipe>> call, Throwable t) {
                 Log.e(TAG, "Error getting json objects from server");
                 Log.e(TAG, t.getMessage());
             }
         });
 
-    }
-
-    private static void setRecipes(List<Recipe> recipes){
-        mRecipes = recipes;
     }
 
 }

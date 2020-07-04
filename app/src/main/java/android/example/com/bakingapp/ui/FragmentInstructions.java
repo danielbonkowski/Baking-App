@@ -1,15 +1,14 @@
 package android.example.com.bakingapp.ui;
 
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.databinding.FragmentInstructionsBinding;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 public class FragmentInstructions extends Fragment {
@@ -28,11 +27,12 @@ public class FragmentInstructions extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        FragmentInstructionsBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.fragment_instructions,container, false);
+        View rootView = inflater.inflate(R.layout.fragment_instructions, container, false);
 
-        binding.instructionsTextView.setText(mInstructions);
+        TextView textView = (TextView) rootView.findViewById(R.id.instructions_text_view);
 
-        return binding.getRoot();
+        textView.setText(mInstructions);
+
+        return rootView;
     }
 }

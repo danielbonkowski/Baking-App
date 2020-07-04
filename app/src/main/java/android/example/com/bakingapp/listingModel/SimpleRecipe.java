@@ -1,20 +1,19 @@
-package android.example.com.bakingapp.model;
-
-import android.os.Parcel;
+package android.example.com.bakingapp.listingModel;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class Recipe implements Serializable {
+public class SimpleRecipe implements Serializable {
+
 
     private int id;
     private String name;
-    private List<Ingredient> ingredients;
-    private List<Step> steps;
+    private List<SimpleIngredient> ingredients;
+    private List<SimpleStep> steps;
     private int servings;
     private String image;
 
-    public Recipe(int id, String name, List<Ingredient> ingredients, List<Step> steps, int servings, String image) {
+    public SimpleRecipe(int id, String name, List<SimpleIngredient> ingredients, List<SimpleStep> steps, int servings, String image) {
         this.id = id;
         this.name = name;
         this.ingredients = ingredients;
@@ -22,6 +21,7 @@ public class Recipe implements Serializable {
         this.servings = servings;
         this.image = image;
     }
+
 
     public int getId() {
         return id;
@@ -31,11 +31,11 @@ public class Recipe implements Serializable {
         return name;
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<SimpleIngredient> getIngredients() {
         return ingredients;
     }
 
-    public List<Step> getSteps() {
+    public List<SimpleStep> getSteps() {
         return steps;
     }
 

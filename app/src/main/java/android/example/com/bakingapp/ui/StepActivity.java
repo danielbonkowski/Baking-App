@@ -1,14 +1,11 @@
 package android.example.com.bakingapp.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.databinding.FragmentInstructionsBinding;
-import android.example.com.bakingapp.model.Recipe;
-import android.example.com.bakingapp.model.Step;
+import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,7 +15,7 @@ public class StepActivity extends AppCompatActivity {
 
     private static final String TAG = StepActivity.class.getSimpleName();
     int mPosition;
-    Recipe mRecipe;
+    SimpleRecipe mSimpleRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +23,15 @@ public class StepActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step);
 
         Intent receivedIntent = getIntent();
-        if(receivedIntent != null && mRecipe == null){
+        if(receivedIntent != null && mSimpleRecipe == null){
 
             mPosition = (int) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_POSITION);
-            mRecipe = (Recipe) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_RECIPE);
+            mSimpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_RECIPE);
 
-            Log.d(TAG,  "Video URL: " + mRecipe.getSteps().get(mPosition).getVideoUrl());
+            Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
             addFragments();
 
-            setTitle(mRecipe.getName());
+            setTitle(mSimpleRecipe.getName());
         }
 
         Button previousButton = findViewById(R.id.button_previous);
@@ -52,7 +49,7 @@ public class StepActivity extends AppCompatActivity {
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mPosition < mRecipe.getSteps().size() - 1){
+                if(mPosition < mSimpleRecipe.getSteps().size() - 1){
                     ++mPosition;
                     replaceFragments();
                 }
@@ -64,14 +61,14 @@ public class StepActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         FragmentInstructions fragmentInstructions = new FragmentInstructions();
-        fragmentInstructions.setInstructions(mRecipe.getSteps().get(mPosition).getDescription());
+        fragmentInstructions.setInstructions(mSimpleRecipe.getSteps().get(mPosition).getDescription());
         fragmentManager.beginTransaction()
                 .add(R.id.ingredients_container, fragmentInstructions)
                 .commit();
 
 
         FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
-        fragmentMediaPlayer.setVideoUrl(mRecipe.getSteps().get(mPosition).getVideoUrl());
+        fragmentMediaPlayer.setVideoUrl(mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
         fragmentManager.beginTransaction()
                 .add(R.id.media_player_container, fragmentMediaPlayer)
                 .commit();
@@ -81,13 +78,13 @@ public class StepActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
 
         FragmentInstructions fragmentInstructions = new FragmentInstructions();
-        fragmentInstructions.setInstructions(mRecipe.getSteps().get(mPosition).getDescription());
+        fragmentInstructions.setInstructions(mSimpleRecipe.getSteps().get(mPosition).getDescription());
         fragmentManager.beginTransaction()
                 .replace(R.id.ingredients_container, fragmentInstructions)
                 .commit();
 
         FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
-        fragmentMediaPlayer.setVideoUrl(mRecipe.getSteps().get(mPosition).getVideoUrl());
+        fragmentMediaPlayer.setVideoUrl(mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
         fragmentManager.beginTransaction()
                 .replace(R.id.media_player_container, fragmentMediaPlayer)
                 .commit();
