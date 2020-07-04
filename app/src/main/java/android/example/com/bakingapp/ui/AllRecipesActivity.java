@@ -17,25 +17,24 @@ FragmentAllRecipes.OnRecipeClickListener{
 
     public static final String INTENT_EXTRA_RECIPE = "Selected_recipe";
     private static final String TAG = AllRecipesActivity.class.getSimpleName();
-    AppDatabase mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDatabase = AppDatabase.getInstance(getApplicationContext());
+        if(savedInstanceState == null){
+            NetworkUtils.getRecipesFromApi(getApplicationContext());
 
-        NetworkUtils.getRecipesFromApi(getApplicationContext());
+            FragmentAllRecipes fragmentAllRecipes = new FragmentAllRecipes();
 
-        FragmentAllRecipes fragmentAllRecipes = new FragmentAllRecipes();
-        fragmentAllRecipes.setRecipes();
+            FragmentManager fragmentManager = getSupportFragmentManager();
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .add(R.id.recipes_container, fragmentAllRecipes)
+                    .commit();
+        }
 
-        fragmentManager.beginTransaction()
-                .add(R.id.recipes_container, fragmentAllRecipes)
-                .commit();
     }
 
     @Override

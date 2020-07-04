@@ -5,12 +5,12 @@ import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleIngredient;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.listingModel.SimpleStep;
-import android.example.com.bakingapp.network.AppExecutors;
-import android.example.com.bakingapp.roomModel.AppDatabase;
 import android.example.com.bakingapp.roomModel.Ingredient;
 import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.example.com.bakingapp.roomModel.Step;
+import android.example.com.bakingapp.viewModel.AllRecipesViewModel;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +18,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,10 +28,9 @@ import java.util.List;
 
 public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.OnRecipeListener {
 
+    private static final String TAG = FragmentAllRecipes.class.getSimpleName();
     private List<SimpleRecipe> mSimpleRecipes;
     private OnRecipeClickListener mCallback;
-    private AppDatabase mDb;
-    private RecyclerView mRecyclerView;
     private AllRecipesAdapter mAdapter;
 
     public interface OnRecipeClickListener{
@@ -43,6 +42,12 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setupViewModel();
+    }
+
+    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
@@ -51,6 +56,7 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
         }catch (ClassCastException e){
             throw new ClassCastException(context.toString() + " must implement OnRecipeClickListener");
         }
+
     }
 
     @Nullable
@@ -65,22 +71,17 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
         mAdapter = new AllRecipesAdapter(getContext(), this);
         mAdapter.setRecipes(mSimpleRecipes);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
+        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
 
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
-        return rootView;
-    }
 
-    public void setRecipes() {
-
-        mDb = AppDatabase.getInstance(getContext());
-        final LiveData<List<RecipeWithIngredientsAndSteps>> recipeWithIngredientsAndSteps =
-                mDb.recipeDao().getRecipesWithIngredientsAndSteps();
-        recipeWithIngredientsAndSteps.observe(this, new Observer<List<RecipeWithIngredientsAndSteps>>() {
+        AllRecipesViewModel mViewModel = ViewModelProviders.of(requireActivity()).get(AllRecipesViewModel.class);
+        mViewModel.getRecipes().observe(this, new Observer<List<RecipeWithIngredientsAndSteps>>() {
             @Override
             public void onChanged(List<RecipeWithIngredientsAndSteps> recipeWithIngredientsAndSteps) {
+                Log.d(TAG,"Updating the list of recipes from LiveData from ViewModel");
                 List<SimpleRecipe> simpleRecipes = new ArrayList<>();
                 for(RecipeWithIngredientsAndSteps fullRecipe :recipeWithIngredientsAndSteps){
 
@@ -110,6 +111,14 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
                 mAdapter.setRecipes(mSimpleRecipes);
             }
         });
+
+
+        return rootView;
+    }
+
+    public void setupViewModel() {
+
+
 
 
 

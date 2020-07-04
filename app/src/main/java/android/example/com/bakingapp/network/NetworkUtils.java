@@ -62,7 +62,9 @@ public class NetworkUtils {
 
                             LiveData<Recipe> recipeLiveData = mDb.recipeDao().getRecipe(simpleRecipe.getId());
 
+
                             if(recipeLiveData == null){
+                                Log.d(TAG, "Live Data Object: " + recipeLiveData.toString());
                                 mDb.recipeDao().insertRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
                                         simpleRecipe.getServings(), simpleRecipe.getImage()));
 
