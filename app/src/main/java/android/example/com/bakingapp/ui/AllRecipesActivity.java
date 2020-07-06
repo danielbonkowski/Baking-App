@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.android.exoplayer2.SimpleExoPlayer;
+
 public class AllRecipesActivity extends AppCompatActivity implements
 FragmentAllRecipes.OnRecipeClickListener{
 

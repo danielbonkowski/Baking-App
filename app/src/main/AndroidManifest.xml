@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.StepActivity"></activity>
+        <activity android:name=".ui.StepActivity" />
         <activity android:name=".ui.SingleRecipeActivity" />
         <activity android:name=".ui.AllRecipesActivity">
             <intent-filter>

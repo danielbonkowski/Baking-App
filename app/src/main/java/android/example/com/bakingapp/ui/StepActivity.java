@@ -23,7 +23,7 @@ public class StepActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step);
 
         Intent receivedIntent = getIntent();
-        if(receivedIntent != null && mSimpleRecipe == null){
+        if(receivedIntent != null){
 
             mPosition = (int) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_POSITION);
             mSimpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_RECIPE);
@@ -34,23 +34,30 @@ public class StepActivity extends AppCompatActivity {
             setTitle(mSimpleRecipe.getName());
         }
 
-        Button previousButton = findViewById(R.id.button_previous);
-        previousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mPosition > 0){
-                    --mPosition;
-                    replaceFragments();
-                }
-            }
-        });
+        previousButtonClickListener();
+        nextButtonClickListener();
+    }
 
+    private void nextButtonClickListener() {
         Button nextButton = findViewById(R.id.button_next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mPosition < mSimpleRecipe.getSteps().size() - 1){
                     ++mPosition;
+                    replaceFragments();
+                }
+            }
+        });
+    }
+
+    private void previousButtonClickListener() {
+        Button previousButton = findViewById(R.id.button_previous);
+        previousButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mPosition > 0){
+                    --mPosition;
                     replaceFragments();
                 }
             }
@@ -68,10 +75,15 @@ public class StepActivity extends AppCompatActivity {
 
 
         FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
-        fragmentMediaPlayer.setVideoUrl(mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
-        fragmentManager.beginTransaction()
-                .add(R.id.media_player_container, fragmentMediaPlayer)
-                .commit();
+        String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
+        if(!videoUrl.isEmpty() && videoUrl != null){
+            fragmentMediaPlayer.setVideoUrl(videoUrl);
+            fragmentManager.beginTransaction()
+                    .add(R.id.media_player_container, fragmentMediaPlayer)
+                    .commit();
+        }
+
+
     }
 
     private void replaceFragments(){
