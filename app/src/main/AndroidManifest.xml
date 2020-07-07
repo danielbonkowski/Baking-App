@@ -11,9 +11,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.StepActivity" />
-        <activity android:name=".ui.SingleRecipeActivity" />
-        <activity android:name=".ui.AllRecipesActivity">
+        <receiver android:name=".BakingAppWidgetProvider">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baking_app_widget_provider_info" />
+        </receiver>
+
+        <service android:enabled="true" android:name=".BakingService"/>
+
+        <activity android:name=".ui.StepActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.SingleRecipeActivity"
+            android:launchMode="singleTop"/>
+        <activity android:name=".ui.AllRecipesActivity"
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

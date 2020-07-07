@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.example.com.bakingapp.BakingAppWidgetProvider;
+import android.example.com.bakingapp.BakingService;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.roomModel.AppDatabase;
@@ -25,25 +27,39 @@ FragmentAllRecipes.OnRecipeClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent widgetIntent = getIntent();
         if(savedInstanceState == null){
             NetworkUtils.getRecipesFromApi(getApplicationContext());
 
             FragmentAllRecipes fragmentAllRecipes = new FragmentAllRecipes();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
-
             fragmentManager.beginTransaction()
                     .add(R.id.recipes_container, fragmentAllRecipes)
                     .commit();
+        }
+
+        if(widgetIntent != null && BakingService.ACTION_UPDATE_RECIPE  == widgetIntent.getAction() &&
+                    savedInstanceState == null){
+
+            SimpleRecipe simpleRecipe = (SimpleRecipe) widgetIntent.getSerializableExtra(INTENT_EXTRA_RECIPE);
+
+            startRecipeDetailsActivity(simpleRecipe);
+
         }
 
     }
 
     @Override
     public void onRecipeSelected(SimpleRecipe simpleRecipe) {
-        Toast.makeText(this, "Position clicked: " + simpleRecipe.getId(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Position clicked: " + simpleRecipe.getId(), Toast.LENGTH_SHORT).show();
         Log.d(TAG, "SimpleRecipe: " + simpleRecipe.getIngredientsToString());
+        BakingService.startActionUpdateRecipe(this, simpleRecipe);
 
+        startRecipeDetailsActivity(simpleRecipe);
+    }
+
+    private void startRecipeDetailsActivity(SimpleRecipe simpleRecipe){
         Bundle bundle = new Bundle();
         bundle.putSerializable(INTENT_EXTRA_RECIPE, simpleRecipe);
 

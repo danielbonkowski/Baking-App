@@ -4,4 +4,6 @@
     <string name="button_next">Next</string>
     <string name="url_test">https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4</string>
     <string name="cooking_graphic">Cooking graphic</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>

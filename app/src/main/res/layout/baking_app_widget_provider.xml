@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#09C"
+    android:padding="@dimen/widget_margin"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/appwidget_apple_pie"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:src="@drawable/apple_pie"
+        android:contentDescription="TODO" />
+    <TextView
+        android:id="@+id/appwidget_recipe_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Selected Recipe"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        android:gravity="center"/>
+
+</LinearLayout>
