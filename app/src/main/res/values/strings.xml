@@ -3,4 +3,5 @@
     <string name="button_previous">Previous</string>
     <string name="button_next">Next</string>
     <string name="url_test">https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4</string>
+    <string name="cooking_graphic">Cooking graphic</string>
 </resources>

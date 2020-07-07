@@ -1,5 +1,6 @@
 package android.example.com.bakingapp.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -14,8 +15,13 @@ import android.widget.Button;
 public class StepActivity extends AppCompatActivity {
 
     private static final String TAG = StepActivity.class.getSimpleName();
+
+    private static final String SIMPLE_RECIPE_KEY = "simple_recipe";
+    private static final String POSITION_KEY = "position";
+
     int mPosition;
     SimpleRecipe mSimpleRecipe;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,19 +29,26 @@ public class StepActivity extends AppCompatActivity {
         setContentView(R.layout.activity_step);
 
         Intent receivedIntent = getIntent();
-        if(receivedIntent != null){
+        if(receivedIntent != null && savedInstanceState == null){
+            Log.d(TAG, "Intent is not null");
 
             mPosition = (int) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_POSITION);
             mSimpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_RECIPE);
 
-            Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
-            addFragments();
 
-            setTitle(mSimpleRecipe.getName());
+
+        }else if(savedInstanceState != null){
+            mPosition = savedInstanceState.getInt(POSITION_KEY);
+            mSimpleRecipe = (SimpleRecipe) savedInstanceState.getSerializable(SIMPLE_RECIPE_KEY);
         }
+        Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
+
+        addFragments();
 
         previousButtonClickListener();
         nextButtonClickListener();
+
+        setTitle(mSimpleRecipe.getName());
     }
 
     private void nextButtonClickListener() {
@@ -74,12 +87,21 @@ public class StepActivity extends AppCompatActivity {
                 .commit();
 
 
-        FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
+
         String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
-        if(!videoUrl.isEmpty() && videoUrl != null){
+        if(videoUrl != null && !videoUrl.isEmpty()){
+
+            FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);
             fragmentManager.beginTransaction()
-                    .add(R.id.media_player_container, fragmentMediaPlayer)
+                    .add(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
+                    .commit();
+
+        }else{
+
+            FragmentCookingGraphic fragmentCookingGraphic = new FragmentCookingGraphic();
+            fragmentManager.beginTransaction()
+                    .add(R.id.media_player_or_graphic_container, fragmentCookingGraphic)
                     .commit();
         }
 
@@ -95,10 +117,28 @@ public class StepActivity extends AppCompatActivity {
                 .replace(R.id.ingredients_container, fragmentInstructions)
                 .commit();
 
-        FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
-        fragmentMediaPlayer.setVideoUrl(mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
-        fragmentManager.beginTransaction()
-                .replace(R.id.media_player_container, fragmentMediaPlayer)
-                .commit();
+        String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
+        if(videoUrl != null && !videoUrl.isEmpty()){
+
+            FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
+            fragmentMediaPlayer.setVideoUrl(videoUrl);
+            fragmentManager.beginTransaction()
+                    .replace(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
+                    .commit();
+
+        }else {
+            FragmentCookingGraphic fragmentCookingGraphic = new FragmentCookingGraphic();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.media_player_or_graphic_container, fragmentCookingGraphic)
+                    .commit();
+        }
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable( SIMPLE_RECIPE_KEY, mSimpleRecipe);
+        outState.putInt(POSITION_KEY, mPosition);
     }
 }

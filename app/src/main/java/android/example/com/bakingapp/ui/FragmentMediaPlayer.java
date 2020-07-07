@@ -1,11 +1,18 @@
 package android.example.com.bakingapp.ui;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.example.com.bakingapp.R;
 import android.media.session.MediaSession;
+import android.media.session.PlaybackState;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.media.session.MediaSessionCompat;
+import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +22,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
+import androidx.media.session.MediaButtonReceiver;
 
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -34,13 +43,14 @@ import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
 
-public class FragmentMediaPlayer extends Fragment {
+public class FragmentMediaPlayer extends Fragment implements ExoPlayer.EventListener{
 
     private PlayerView mPlayerView;
     private String mVideoUrl;
     private SimpleExoPlayer mPlayer;
-    private PlaybackStateListener mPlaybackListener;
-    private static MediaSession mMediaSession;
+    private static MediaSessionCompat mMediaSession;
+    private PlaybackStateCompat.Builder mPlaybackStateBuilder;
+    private NotificationManager mNotificationManager;
 
     private boolean mPlayWhenReady = true;
     private int mCurrentWindow = 0;
@@ -59,7 +69,6 @@ public class FragmentMediaPlayer extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_media_player, container, false);
 
         mPlayerView = (PlayerView) rootView.findViewById(R.id.fragment_video_view);
-        mPlaybackListener = new PlaybackStateListener();
 
         return rootView;
     }
@@ -69,7 +78,7 @@ public class FragmentMediaPlayer extends Fragment {
     }
 
     private void initializePlayer(){
-        if(mPlayer == null){
+        if(mPlayer == null && mVideoUrl != null && !mVideoUrl.isEmpty()){
             Uri uri = Uri.parse(mVideoUrl);
             TrackSelector trackSelector = new DefaultTrackSelector(getContext());
             LoadControl loadControl = new DefaultLoadControl();
@@ -79,35 +88,19 @@ public class FragmentMediaPlayer extends Fragment {
             MediaSource mediaSource = new ExtractorMediaSource(uri,
                     new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(),
                     null, null);
-            mPlayer.addListener(mPlaybackListener);
+            mPlayer.addListener(this);
             mPlayer.prepare(mediaSource);
             mPlayer.setPlayWhenReady(true);
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
-    private void hideSystemUi(){
-        mPlayerView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-    }
-
-    private MediaSource buildMediaSource(Uri uri) {
-        DataSource.Factory dataSourceFactory =
-                new DefaultDataSourceFactory(getContext(), "exoplayer-codelab");
-        DashMediaSource.Factory mediaSourceFactory = new DashMediaSource.Factory(dataSourceFactory);
-        return mediaSourceFactory.createMediaSource(uri);
-    }
 
     private void releasePlayer(){
         if(mPlayer != null){
             mPlayWhenReady = mPlayer.getPlayWhenReady();
             mPlaybackPosition = mPlayer.getCurrentPosition();
             mCurrentWindow = mPlayer.getCurrentWindowIndex();
-            mPlayer.removeListener(mPlaybackListener);
+            mPlayer.removeListener(this);
             mPlayer.stop();
             mPlayer.release();
             mPlayer = null;
@@ -115,18 +108,47 @@ public class FragmentMediaPlayer extends Fragment {
     }
 
 
+    private void initializeMediaSession(){
+
+        mMediaSession = new MediaSessionCompat(getContext(), TAG);
+
+        mMediaSession.setFlags(
+                MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS |
+                        MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+
+        mMediaSession.setMediaButtonReceiver(null);
+
+        mPlaybackStateBuilder = new PlaybackStateCompat.Builder()
+                .setActions(
+                        PlaybackStateCompat.ACTION_PLAY |
+                                PlaybackStateCompat.ACTION_PAUSE |
+                                PlaybackStateCompat.ACTION_FAST_FORWARD |
+                                PlaybackStateCompat.ACTION_REWIND |
+                                PlaybackStateCompat.ACTION_PLAY_PAUSE);
+
+        mMediaSession.setPlaybackState(mPlaybackStateBuilder.build());
+
+        mMediaSession.setCallback(new MySessionCallback());
+
+        mMediaSession.setActive(true);
+    }
+
+
     @Override
     public void onStart() {
         super.onStart();
         if(Util.SDK_INT >= 24){
+            initializeMediaSession();
             initializePlayer();
         }
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
         if(Util.SDK_INT < 24 || mPlayer == null){
+            initializeMediaSession();
             initializePlayer();
         }
     }
@@ -148,32 +170,42 @@ public class FragmentMediaPlayer extends Fragment {
     }
 
 
-    static class PlaybackStateListener implements Player.EventListener{
+    @Override
+    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+        if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
+            mPlaybackStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
+                    mPlayer.getCurrentPosition(), 1f);
+        }else if((playbackState == ExoPlayer.STATE_READY)){
+            mPlaybackStateBuilder.setState(PlaybackStateCompat.STATE_PAUSED,
+                    mPlayer.getCurrentPosition(), 1f);
+        }
+
+        mMediaSession.setPlaybackState(mPlaybackStateBuilder.build());
+
+    }
 
 
-        private static final String TAG = PlaybackStateListener.class.getSimpleName();
+    private class MySessionCallback extends MediaSessionCompat.Callback{
         @Override
-        public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-            String stateString;
-            switch (playbackState) {
-                case ExoPlayer.STATE_IDLE:
-                    stateString = "ExoPlayer.STATE_IDLE      -";
-                    break;
-                case ExoPlayer.STATE_BUFFERING:
-                    stateString = "ExoPlayer.STATE_BUFFERING -";
-                    break;
-                case ExoPlayer.STATE_READY:
-                    stateString = "ExoPlayer.STATE_READY     -";
-                    break;
-                case ExoPlayer.STATE_ENDED:
-                    stateString = "ExoPlayer.STATE_ENDED     -";
-                    break;
-                default:
-                    stateString = "UNKNOWN_STATE             -";
-                    break;
-            }
-            Log.d(TAG, "changed state to " + stateString
-                    + " playWhenReady " + playWhenReady);
+        public void onPlay() {
+            mPlayer.setPlayWhenReady(true);
+        }
+
+        @Override
+        public void onPause() {
+            mPlayer.setPlayWhenReady(false);
+        }
+
+        @Override
+        public void onFastForward() {
+            mPlaybackPosition = mPlayer.getCurrentPosition();
+            mPlayer.seekTo(mPlaybackPosition + 5000);
+        }
+
+        @Override
+        public void onRewind() {
+            mPlaybackPosition = mPlayer.getCurrentPosition();
+            mPlayer.seekTo(mPlaybackPosition - 5000);
         }
     }
 }
