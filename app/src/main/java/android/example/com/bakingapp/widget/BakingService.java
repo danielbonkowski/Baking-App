@@ -1,10 +1,11 @@
-package android.example.com.bakingapp;
+package android.example.com.bakingapp.widget;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.util.Log;
 
@@ -16,8 +17,7 @@ public class BakingService extends IntentService {
             "android.example.com.bakingapp";
     public static final String SERIALIZED_RECIPE_KEY =
             "serialized_recipe";
-    public static final String EXTRA_RECIPE_ID =
-            "recipe_id";
+    public static SimpleRecipe SIMPLE_RECIPE;
     private static final String TAG = BakingService.class.getSimpleName();
 
     /**
@@ -30,6 +30,7 @@ public class BakingService extends IntentService {
     }
 
     public static void startActionUpdateRecipe(Context context, SimpleRecipe simpleRecipe){
+        SIMPLE_RECIPE = simpleRecipe;
         Intent intent = new Intent(context, BakingService.class);
         intent.setAction(ACTION_UPDATE_RECIPE);
         intent.putExtra(SERIALIZED_RECIPE_KEY, simpleRecipe);
@@ -52,6 +53,8 @@ public class BakingService extends IntentService {
 
         AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(this);
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, BakingAppWidgetProvider.class));
+
+        appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.appwidget_ingredients_layout);
         BakingAppWidgetProvider.updateAppWidgets(this, appWidgetManager, appWidgetIds, simpleRecipe);
     }
 }

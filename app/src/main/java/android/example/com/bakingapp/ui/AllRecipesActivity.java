@@ -4,17 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
-import android.example.com.bakingapp.BakingAppWidgetProvider;
-import android.example.com.bakingapp.BakingService;
+import android.example.com.bakingapp.widget.BakingService;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
-import android.example.com.bakingapp.roomModel.AppDatabase;
 import android.example.com.bakingapp.network.NetworkUtils;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.exoplayer2.SimpleExoPlayer;
 
 public class AllRecipesActivity extends AppCompatActivity implements
 FragmentAllRecipes.OnRecipeClickListener{
@@ -24,11 +19,13 @@ FragmentAllRecipes.OnRecipeClickListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Intent widgetIntent = getIntent();
         if(savedInstanceState == null){
+            Log.d(TAG, "First ingredient is tested");
             Log.d(TAG, "Widget intent: " + widgetIntent.getAction());
             Log.d(TAG, "Saved instance state: " + (savedInstanceState == null ? "null": "not null"));
             NetworkUtils.getRecipesFromApi(getApplicationContext());
@@ -49,7 +46,10 @@ FragmentAllRecipes.OnRecipeClickListener{
             Log.d(TAG, "Widget intent: " + widgetIntent.getAction());
             Log.d(TAG, "Saved instance state: " + (savedInstanceState == null ? "null": "not null"));
             SimpleRecipe simpleRecipe = (SimpleRecipe) widgetIntent.getSerializableExtra(INTENT_EXTRA_RECIPE);
-            startRecipeDetailsActivity(simpleRecipe);
+            if(simpleRecipe != null){
+                startRecipeDetailsActivity(simpleRecipe);
+            }
+
 
         }
 

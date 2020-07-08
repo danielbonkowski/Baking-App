@@ -8,13 +8,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="horizontal">
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center">
+            android:layout_weight="1">
             <ImageView
                 android:id="@+id/appwidget_apple_pie"
                 android:layout_width="60dp"
@@ -35,13 +34,12 @@
             android:gravity="center"
              />
     </LinearLayout>
-    <LinearLayout
+    <GridView
         android:id="@+id/appwidget_ingredients_layout"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-    </LinearLayout>
+        android:layout_height="match_parent">
+    </GridView>
 
 
 </LinearLayout>

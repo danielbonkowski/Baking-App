@@ -1,0 +1,102 @@
+package android.example.com.bakingapp.widget;
+
+import android.appwidget.AppWidgetManager;
+import android.content.Context;
+import android.content.Intent;
+import android.example.com.bakingapp.R;
+import android.example.com.bakingapp.listingModel.SimpleIngredient;
+import android.example.com.bakingapp.listingModel.SimpleRecipe;
+import android.util.Log;
+import android.widget.RemoteViews;
+import android.widget.RemoteViewsService;
+
+public class LinearWidgetService extends RemoteViewsService {
+
+    private static final String TAG = LinearWidgetService.class.getSimpleName();
+
+    @Override
+    public RemoteViewsFactory onGetViewFactory(Intent intent) {
+        Log.d("TAG", "First ingredient is tested");
+        return new LinearLayoutRemoteViewsFactory(this.getApplicationContext(), intent);
+    }
+}
+
+
+class LinearLayoutRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
+    private static final String TAG = LinearLayoutRemoteViewsFactory.class.getSimpleName();
+
+    Context mContext;
+    SimpleRecipe mSimpleRecipe;
+    private int mWidgetId;
+
+    public LinearLayoutRemoteViewsFactory(Context applicationContext, Intent intent) {
+        Log.d(TAG, "First ingredient is tested");
+        this.mContext = applicationContext;
+        mSimpleRecipe = BakingService.SIMPLE_RECIPE;
+        mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                AppWidgetManager.INVALID_APPWIDGET_ID);
+    }
+
+    @Override
+    public void onCreate() {
+
+    }
+
+    @Override
+    public void onDataSetChanged() {
+        Log.d(TAG, "First ingredient is tested");
+        mSimpleRecipe = BakingService.SIMPLE_RECIPE;
+
+    }
+
+    @Override
+    public void onDestroy() {
+        Log.d(TAG, "First ingredient is tested");
+    }
+
+    @Override
+    public int getCount() {
+        Log.d(TAG, "First ingredient is tested");
+        if(mSimpleRecipe == null) return 0;
+        return mSimpleRecipe.getIngredients().size();
+    }
+
+    @Override
+    public RemoteViews getViewAt(int position) {
+
+        SimpleIngredient ingredient = mSimpleRecipe.getIngredients().get(position);
+        Log.d(TAG, "First ingredient is: " + ingredient.getName());
+
+        RemoteViews views = new RemoteViews(mContext.getPackageName(), R.layout.ingredient_widget_item);
+
+        views.setTextViewText(R.id.ingredient_quantity, String.valueOf(ingredient.getQuantity()));
+        views.setTextViewText(R.id.ingredient_measure, ingredient.getMeasure());
+        views.setTextViewText(R.id.ingredient_name, ingredient.getName());
+
+        return views;
+    }
+
+    @Override
+    public RemoteViews getLoadingView() {
+        Log.d(TAG, "First ingredient is tested");
+        return null;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        Log.d(TAG, "First ingredient is tested");
+        return 1;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        Log.d(TAG, "First ingredient is tested");
+        return position;
+    }
+
+    @Override
+    public boolean hasStableIds() {
+        Log.d(TAG, "First ingredient is tested");
+        return true;
+    }
+}

@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <receiver android:name=".BakingAppWidgetProvider">
+        <receiver android:name=".widget.BakingAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -21,7 +21,7 @@
                 android:resource="@xml/baking_app_widget_provider_info" />
         </receiver>
 
-        <service android:enabled="true" android:name=".BakingService"/>
+        <service android:enabled="true" android:name=".widget.BakingService"/>
 
         <activity android:name=".ui.StepActivity"
             android:launchMode="singleTop"/>
@@ -35,6 +35,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name=".widget.LinearWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>
     </application>
 
 </manifest>

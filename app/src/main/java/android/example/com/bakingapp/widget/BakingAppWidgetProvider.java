@@ -1,14 +1,16 @@
-package android.example.com.bakingapp;
+package android.example.com.bakingapp.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
+import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.ui.AllRecipesActivity;
-import android.example.com.bakingapp.ui.SingleRecipeActivity;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -18,18 +20,18 @@ import android.widget.RemoteViews;
 public class BakingAppWidgetProvider extends AppWidgetProvider {
 
     private static SimpleRecipe mSimpleRecipe;
+    private static final String TAG = BakingAppWidgetProvider.class.getSimpleName();
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId, SimpleRecipe simpleRecipe) {
-
 
         Bundle options = appWidgetManager.getAppWidgetOptions(appWidgetId);
         int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
 
         RemoteViews views;
-        if(width >= 200 && height >= 200){
-            views = getRecipeLogoWithNameAndIngredients();
+        if(width >= 180 && height >= 180){
+            views = getRecipeLogoWithNameAndIngredients(context, simpleRecipe, appWidgetId);
         }else if(width >= 180){
             views = getRecipeLogoWithName(context, simpleRecipe);
         }else{
@@ -45,18 +47,40 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }
 
-    private static RemoteViews getRecipeLogoWithNameAndIngredients() {
-        return null;
+    private static RemoteViews getRecipeLogoWithNameAndIngredients(Context context,
+                                                                   SimpleRecipe simpleRecipe, int appWidgetId) {
+        Log.d(TAG, "First ingredient is  3");
+        PendingIntent pendingIntent = getPendingIntent(context, simpleRecipe);
+
+        Intent intent = new Intent(context, LinearWidgetService.class);
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
+        intent.setData(Uri.parse(intent.toUri(Intent.URI_INTENT_SCHEME)));
+
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
+        views.setOnClickPendingIntent(R.id.widget_main_layout, pendingIntent);
+        views.setRemoteAdapter(R.id.appwidget_ingredients_layout, intent);
+        if(simpleRecipe != null){
+            views.setViewVisibility(R.id.appwidget_recipe_name, View.VISIBLE);
+            views.setTextViewText(R.id.appwidget_recipe_name, simpleRecipe.getName());
+            views.setViewVisibility(R.id.appwidget_ingredients_layout, View.VISIBLE);
+        }
+
+
+
+        return views;
     }
 
     private static RemoteViews getRecipeLogo(Context context, SimpleRecipe simpleRecipe) {
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget_provider);
+        Log.d(TAG, "First ingredient is  1");
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
         PendingIntent pendingIntent = getPendingIntent(context, simpleRecipe);
 
         if(simpleRecipe != null){
-            views.setOnClickPendingIntent(R.id.widget_main_layout, pendingIntent);
             views.setViewVisibility(R.id.appwidget_recipe_name, View.GONE);
+            views.setViewVisibility(R.id.appwidget_ingredients_layout, View.GONE);
         }
+        views.setOnClickPendingIntent(R.id.widget_main_layout, pendingIntent);
+
 
         return views;
     }
@@ -65,7 +89,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
 
 
     private static RemoteViews getRecipeLogoWithName(Context context, SimpleRecipe simpleRecipe) {
-
+        Log.d(TAG, "First ingredient is  2");
         RemoteViews views = getRecipeLogo(context, simpleRecipe);
 
         if(simpleRecipe != null){
@@ -82,7 +106,6 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
 
         Intent recipeUpdateIntent = new Intent(context, AllRecipesActivity.class);
         recipeUpdateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        recipeUpdateIntent.setAction(BakingService.ACTION_UPDATE_RECIPE);
         recipeUpdateIntent.putExtras(bundle);
 
         return PendingIntent.getActivity(context, 0, recipeUpdateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
