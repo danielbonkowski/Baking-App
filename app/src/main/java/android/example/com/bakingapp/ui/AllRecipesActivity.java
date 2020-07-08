@@ -29,6 +29,8 @@ FragmentAllRecipes.OnRecipeClickListener{
 
         Intent widgetIntent = getIntent();
         if(savedInstanceState == null){
+            Log.d(TAG, "Widget intent: " + widgetIntent.getAction());
+            Log.d(TAG, "Saved instance state: " + (savedInstanceState == null ? "null": "not null"));
             NetworkUtils.getRecipesFromApi(getApplicationContext());
 
             FragmentAllRecipes fragmentAllRecipes = new FragmentAllRecipes();
@@ -39,14 +41,19 @@ FragmentAllRecipes.OnRecipeClickListener{
                     .commit();
         }
 
-        if(widgetIntent != null && BakingService.ACTION_UPDATE_RECIPE  == widgetIntent.getAction() &&
-                    savedInstanceState == null){
+        Log.d(TAG, "Widget intent: " + (widgetIntent == null ? "null" : widgetIntent.getAction()));
+        Log.d(TAG, "Saved instance state: " + (savedInstanceState == null ? "null": "not null"));
 
+        if(widgetIntent != null && BakingService.ACTION_UPDATE_RECIPE  == widgetIntent.getAction()){
+
+            Log.d(TAG, "Widget intent: " + widgetIntent.getAction());
+            Log.d(TAG, "Saved instance state: " + (savedInstanceState == null ? "null": "not null"));
             SimpleRecipe simpleRecipe = (SimpleRecipe) widgetIntent.getSerializableExtra(INTENT_EXTRA_RECIPE);
-
             startRecipeDetailsActivity(simpleRecipe);
 
         }
+
+
 
     }
 

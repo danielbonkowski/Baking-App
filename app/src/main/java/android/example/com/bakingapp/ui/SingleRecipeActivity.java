@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.example.com.bakingapp.BakingService;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.os.Bundle;
@@ -28,6 +29,8 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
         if(receivedIntent != null){
 
             SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
+            BakingService.startActionUpdateRecipe(this, simpleRecipe);
+
             FragmentSingleRecipe fragmentSingleRecipe = new FragmentSingleRecipe();
             fragmentSingleRecipe.setRecipe(simpleRecipe);
 

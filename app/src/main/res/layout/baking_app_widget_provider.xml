@@ -3,22 +3,45 @@
     android:layout_height="match_parent"
     android:background="#09C"
     android:padding="@dimen/widget_margin"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/widget_main_layout">
 
-    <ImageView
-        android:id="@+id/appwidget_apple_pie"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="center"
-        android:src="@drawable/apple_pie"
-        android:contentDescription="TODO" />
-    <TextView
-        android:id="@+id/appwidget_recipe_name"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center">
+            <ImageView
+                android:id="@+id/appwidget_apple_pie"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:src="@drawable/apple_pie"
+                android:contentDescription="@string/logo_description"  />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/appwidget_recipe_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_gravity="center_vertical"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:gravity="center"
+             />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/appwidget_ingredients_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Selected Recipe"
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:gravity="center"/>
+        android:orientation="vertical">
+
+    </LinearLayout>
+
 
 </LinearLayout>
