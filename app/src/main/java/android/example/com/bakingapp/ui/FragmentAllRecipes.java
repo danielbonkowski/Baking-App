@@ -118,10 +118,6 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
     public void setupViewModel() {
 
-
-
-
-
     }
 
     @Override

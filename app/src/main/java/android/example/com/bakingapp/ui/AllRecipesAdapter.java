@@ -51,7 +51,8 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
     public void onBindViewHolder(@NonNull RecipesViewHolder holder, int position) {
 
         holder.recipeName.setText(mSimpleRecipes.get(position).getName());
-        holder.ingredients.setText(mSimpleRecipes.get(position).getIngredientsToString());
+        holder.servings.setText(String.valueOf(mSimpleRecipes.get(position).getServings()));
+        holder.servingsLabel.setText(mContext.getResources().getString(R.string.servings));
     }
 
     @Override
@@ -63,12 +64,14 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
     public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         public TextView recipeName;
-        public TextView ingredients;
+        public TextView servings;
+        public TextView servingsLabel;
 
         public RecipesViewHolder(@NonNull View itemView) {
             super(itemView);
             recipeName = itemView.findViewById(R.id.recipes_item_recipe_name);
-            ingredients = itemView.findViewById(R.id.recipes_item_recipe_ingredients);
+            servings = itemView.findViewById(R.id.recipes_item_recipe_servings);
+            servingsLabel = itemView.findViewById(R.id.recipes_item_recipe_servings_label);
 
             itemView.setOnClickListener(this);
         }

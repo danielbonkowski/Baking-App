@@ -9,4 +9,5 @@
     <string name="logo_description">Baking app logo</string>
     <string name="selected_recipe">Selected Recipe</string>
     <string name="empty_ingredients_list">empty ingredients list</string>
+    <string name="servings">Servings</string>
 </resources>
