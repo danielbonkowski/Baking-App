@@ -10,4 +10,6 @@
     <string name="selected_recipe">Selected Recipe</string>
     <string name="empty_ingredients_list">empty ingredients list</string>
     <string name="servings">Servings</string>
+    <string name="steps_label">Steps</string>
+    <string name="ingredients_label">Ingredients</string>
 </resources>

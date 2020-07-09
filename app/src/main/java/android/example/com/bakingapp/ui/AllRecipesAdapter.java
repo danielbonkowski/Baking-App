@@ -16,6 +16,7 @@ import java.util.List;
 public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.RecipesViewHolder> {
 
     private static final String TAG = AllRecipesAdapter.class.getSimpleName();
+    private static final int INTRODUCTION = 1;
 
     List<SimpleRecipe> mSimpleRecipes;
     Context mContext;
@@ -53,6 +54,9 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
         holder.recipeName.setText(mSimpleRecipes.get(position).getName());
         holder.servings.setText(String.valueOf(mSimpleRecipes.get(position).getServings()));
         holder.servingsLabel.setText(mContext.getResources().getString(R.string.servings));
+        holder.steps.setText(String.valueOf(mSimpleRecipes.get(position).getSteps().size() - INTRODUCTION));
+        holder.stepsLabel.setText(mContext.getResources().getString(R.string.steps_label));
+        holder.ingredients.setText(mSimpleRecipes.get(position).getIngredientsToString());
     }
 
     @Override
@@ -63,15 +67,24 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
 
     public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        public TextView recipeName;
-        public TextView servings;
-        public TextView servingsLabel;
+        private TextView recipeName;
+        private TextView servings;
+        private TextView servingsLabel;
+        private TextView steps;
+        private TextView stepsLabel;
+        private TextView ingredients;
+        private TextView ingredientsLabel;
+
 
         public RecipesViewHolder(@NonNull View itemView) {
             super(itemView);
             recipeName = itemView.findViewById(R.id.recipes_item_recipe_name);
             servings = itemView.findViewById(R.id.recipes_item_recipe_servings);
             servingsLabel = itemView.findViewById(R.id.recipes_item_recipe_servings_label);
+            steps = itemView.findViewById(R.id.recipes_item_recipe_steps);
+            stepsLabel = itemView.findViewById(R.id.recipes_item_recipe_steps_label);
+            ingredients = itemView.findViewById(R.id.recipes_item_recipe_ingredients);
+            ingredientsLabel = itemView.findViewById(R.id.recipes_item_recipe_ingredients_label);
 
             itemView.setOnClickListener(this);
         }

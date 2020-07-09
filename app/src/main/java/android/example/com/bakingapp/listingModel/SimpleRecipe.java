@@ -55,7 +55,7 @@ public class SimpleRecipe implements Serializable {
                 ingredientsString += ingredients.get(i).getName();
 
                 if(i != ingredients.size() - 1) {
-                    ingredientsString += ", ";
+                    ingredientsString += "\n";
                 }
             }
         }
