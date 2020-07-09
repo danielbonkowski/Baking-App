@@ -39,7 +39,16 @@ public class SingleRecipeAdapter extends RecyclerView.Adapter<SingleRecipeAdapte
 
     @Override
     public void onBindViewHolder(@NonNull SingleRecipeViewHolder holder, int position) {
-        holder.description.setText(mSimpleRecipe.getSteps().get(position).getShortDescription());
+        holder.description.setText(getDescription(position));
+    }
+
+    private String getDescription(int position){
+
+        if(position > 0){
+            int stepNr = position + 1;
+            return position + ". " + mSimpleRecipe.getSteps().get(position).getShortDescription();
+        }
+        return mSimpleRecipe.getSteps().get(position).getShortDescription();
     }
 
     @Override
