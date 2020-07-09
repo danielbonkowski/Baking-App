@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="cups">
+        <item quantity="one">cup</item>
+        <item quantity="other">cups</item>
+    </plurals>
+    <plurals name="tablespoons">
+        <item quantity="one">tablespoon</item>
+        <item quantity="other">tablespoons</item>
+    </plurals>
+    <plurals name="teaspoons">
+        <item quantity="one">teaspoon</item>
+        <item quantity="other">teaspoons</item>
+    </plurals>
+    <plurals name="kilos">
+        <item quantity="one">kilo</item>
+        <item quantity="other">kilos</item>
+    </plurals>
+    <plurals name="grams">
+        <item quantity="one">gram</item>
+        <item quantity="other">grams</item>
+    </plurals>
+    <plurals name="ounces">
+        <item quantity="one">ounce</item>
+        <item quantity="other">ounces</item>
+    </plurals>
+    <plurals name="units">
+        <item quantity="one">unit</item>
+        <item quantity="other">units</item>
+    </plurals>
+</resources>

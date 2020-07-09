@@ -29,12 +29,12 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         int width = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
         int height = options.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT);
 
-        RemoteViews views;
+        RemoteViews views = null;
         if(width >= 180 && height >= 180){
             views = getRecipeLogoWithNameAndIngredients(context, simpleRecipe, appWidgetId);
         }else if(width >= 180){
             views = getRecipeLogoWithName(context, simpleRecipe);
-        }else{
+        }else if (height < 180){
             views = getRecipeLogo(context, simpleRecipe);
         }
 
@@ -59,10 +59,13 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
         views.setOnClickPendingIntent(R.id.widget_main_layout, pendingIntent);
         views.setRemoteAdapter(R.id.appwidget_ingredients_layout, intent);
+        views.setEmptyView(R.id.appwidget_ingredients_layout, R.id.appwidget_empty_list);
+        views.setViewVisibility(R.id.appwidget_ingredients_layout, View.VISIBLE);
+
+
         if(simpleRecipe != null){
             views.setViewVisibility(R.id.appwidget_recipe_name, View.VISIBLE);
             views.setTextViewText(R.id.appwidget_recipe_name, simpleRecipe.getName());
-            views.setViewVisibility(R.id.appwidget_ingredients_layout, View.VISIBLE);
         }
 
 
@@ -75,12 +78,10 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
         PendingIntent pendingIntent = getPendingIntent(context, simpleRecipe);
 
-        if(simpleRecipe != null){
-            views.setViewVisibility(R.id.appwidget_recipe_name, View.GONE);
-            views.setViewVisibility(R.id.appwidget_ingredients_layout, View.GONE);
-        }
+        views.setViewVisibility(R.id.appwidget_recipe_name, View.GONE);
+        views.setViewVisibility(R.id.appwidget_ingredients_layout, View.GONE);
+        views.setViewVisibility(R.id.appwidget_empty_list, View.GONE);
         views.setOnClickPendingIntent(R.id.widget_main_layout, pendingIntent);
-
 
         return views;
     }
@@ -105,6 +106,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         bundle.putSerializable(AllRecipesActivity.INTENT_EXTRA_RECIPE, simpleRecipe);
 
         Intent recipeUpdateIntent = new Intent(context, AllRecipesActivity.class);
+        recipeUpdateIntent.setAction(BakingService.ACTION_UPDATE_RECIPE);
         recipeUpdateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         recipeUpdateIntent.putExtras(bundle);
 

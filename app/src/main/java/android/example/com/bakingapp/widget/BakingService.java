@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.bakingapp.R;
+import android.example.com.bakingapp.RecipeUtilities;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.util.Log;
 
@@ -17,7 +18,6 @@ public class BakingService extends IntentService {
             "android.example.com.bakingapp";
     public static final String SERIALIZED_RECIPE_KEY =
             "serialized_recipe";
-    public static SimpleRecipe SIMPLE_RECIPE;
     private static final String TAG = BakingService.class.getSimpleName();
 
     /**
@@ -30,7 +30,7 @@ public class BakingService extends IntentService {
     }
 
     public static void startActionUpdateRecipe(Context context, SimpleRecipe simpleRecipe){
-        SIMPLE_RECIPE = simpleRecipe;
+        RecipeUtilities.setSimpleRecipe(simpleRecipe);
         Intent intent = new Intent(context, BakingService.class);
         intent.setAction(ACTION_UPDATE_RECIPE);
         intent.putExtra(SERIALIZED_RECIPE_KEY, simpleRecipe);

@@ -27,7 +27,6 @@ FragmentAllRecipes.OnRecipeClickListener{
         if(savedInstanceState == null){
             Log.d(TAG, "First ingredient is tested");
             Log.d(TAG, "Widget intent: " + widgetIntent.getAction());
-            Log.d(TAG, "Saved instance state: " + (savedInstanceState == null ? "null": "not null"));
             NetworkUtils.getRecipesFromApi(getApplicationContext());
 
             FragmentAllRecipes fragmentAllRecipes = new FragmentAllRecipes();

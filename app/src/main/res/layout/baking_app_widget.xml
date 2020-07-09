@@ -1,6 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="#09C"
     android:padding="@dimen/widget_margin"
     android:orientation="vertical"
@@ -9,7 +9,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -32,14 +33,23 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:gravity="center"
+            android:visibility="gone"
              />
     </LinearLayout>
     <GridView
         android:id="@+id/appwidget_ingredients_layout"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </GridView>
+
+    <ImageView
+        android:id="@+id/appwidget_empty_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/empty_ingredients_list"
+        android:src="@drawable/cooking_graphic"
+        android:visibility="gone"/>
 
 
 </LinearLayout>
