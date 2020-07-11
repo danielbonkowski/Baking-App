@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SingleRecipeAdapter extends RecyclerView.Adapter<SingleRecipeAdapter.SingleRecipeViewHolder> {
+public class SingleRecipeStepsAdapter extends RecyclerView.Adapter<SingleRecipeStepsAdapter.SingleRecipeViewHolder> {
 
     Context mContext;
     private static SimpleRecipe mSimpleRecipe;
@@ -21,11 +21,13 @@ public class SingleRecipeAdapter extends RecyclerView.Adapter<SingleRecipeAdapte
         void onStepClick(int position);
     }
 
-    public static void setRecipe(SimpleRecipe simpleRecipe){
+    public void setRecipe(SimpleRecipe simpleRecipe){
+
         mSimpleRecipe = simpleRecipe;
+        notifyDataSetChanged();
     }
 
-    public SingleRecipeAdapter(Context context, OnStepListener onStepListener) {
+    public SingleRecipeStepsAdapter(Context context, OnStepListener onStepListener) {
         mContext = context;
         mOnStepListener = onStepListener;
     }

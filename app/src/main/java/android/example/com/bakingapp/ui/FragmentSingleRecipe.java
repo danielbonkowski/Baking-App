@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class FragmentSingleRecipe extends Fragment implements SingleRecipeAdapter.OnStepListener {
+public class FragmentSingleRecipe extends Fragment implements SingleRecipeStepsAdapter.OnStepListener {
 
     private SimpleRecipe mSimpleRecipe;
     private OnStepClickListener mCallback;
@@ -45,20 +45,28 @@ public class FragmentSingleRecipe extends Fragment implements SingleRecipeAdapte
 
         View rootView = inflater.inflate(R.layout.fragment_single_recipe_steps, container, false);
 
-        TextView ingredientsTextView = (TextView) rootView.findViewById(R.id.single_recipe_ingredients_text_view);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.single_recipe_steps_recycler_view);
+        RecyclerView ingredientsRecyclerView = (RecyclerView) rootView.findViewById(R.id.single_recipe_ingredients_recycler_view);
+        RecyclerView stepsRecyclerView = (RecyclerView) rootView.findViewById(R.id.single_recipe_steps_recycler_view);
 
 
         if(mSimpleRecipe != null){
-            ingredientsTextView.setText(mSimpleRecipe.getIngredientsToString());
-
-            RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(),
+            RecyclerView.LayoutManager ingredientsLayoutManager = new LinearLayoutManager(getContext(),
                     RecyclerView.VERTICAL, false);
-            SingleRecipeAdapter singleRecipeAdapter = new SingleRecipeAdapter(getContext(),this);
-            SingleRecipeAdapter.setRecipe(mSimpleRecipe);
+            SingleRecipeIngredientsAdapter singleRecipeIngredientsAdapter =
+                    new SingleRecipeIngredientsAdapter(getContext());
+            singleRecipeIngredientsAdapter.setSimpleRecipe(mSimpleRecipe);
 
-            recyclerView.setLayoutManager(layoutManager);
-            recyclerView.setAdapter(singleRecipeAdapter);
+            ingredientsRecyclerView.setLayoutManager(ingredientsLayoutManager);
+            ingredientsRecyclerView.setAdapter(singleRecipeIngredientsAdapter);
+
+
+            RecyclerView.LayoutManager stepsLayoutManager = new LinearLayoutManager(getContext(),
+                    RecyclerView.VERTICAL, false);
+            SingleRecipeStepsAdapter singleRecipeStepsAdapter = new SingleRecipeStepsAdapter(getContext(),this);
+            singleRecipeStepsAdapter.setRecipe(mSimpleRecipe);
+
+            stepsRecyclerView.setLayoutManager(stepsLayoutManager);
+            stepsRecyclerView.setAdapter(singleRecipeStepsAdapter);
 
             return rootView;
         }

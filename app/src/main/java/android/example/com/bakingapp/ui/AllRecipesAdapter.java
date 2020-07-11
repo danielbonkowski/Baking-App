@@ -3,6 +3,7 @@ package android.example.com.bakingapp.ui;
 import android.content.Context;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
     }
 
     public void setRecipes(List<SimpleRecipe> simpleRecipes){
+        Log.d(TAG, "Notify data set changed");
         mSimpleRecipes = simpleRecipes;
         notifyDataSetChanged();
     }
@@ -67,13 +69,13 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
 
     public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView recipeName;
-        private TextView servings;
-        private TextView servingsLabel;
-        private TextView steps;
-        private TextView stepsLabel;
-        private TextView ingredients;
-        private TextView ingredientsLabel;
+        TextView recipeName;
+        TextView servings;
+        TextView servingsLabel;
+        TextView steps;
+        TextView stepsLabel;
+        TextView ingredients;
+        TextView ingredientsLabel;
 
 
         public RecipesViewHolder(@NonNull View itemView) {

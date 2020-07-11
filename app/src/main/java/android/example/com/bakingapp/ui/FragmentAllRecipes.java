@@ -11,6 +11,7 @@ import android.example.com.bakingapp.roomModel.Step;
 import android.example.com.bakingapp.viewModel.AllRecipesViewModel;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,6 +69,7 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+
         mAdapter = new AllRecipesAdapter(getContext(), this);
         mAdapter.setRecipes(mSimpleRecipes);
 
@@ -78,42 +80,45 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
 
         AllRecipesViewModel mViewModel = ViewModelProviders.of(requireActivity()).get(AllRecipesViewModel.class);
-        mViewModel.getRecipes().observe(this, new Observer<List<RecipeWithIngredientsAndSteps>>() {
-            @Override
-            public void onChanged(List<RecipeWithIngredientsAndSteps> recipeWithIngredientsAndSteps) {
-                Log.d(TAG,"Updating the list of recipes from LiveData from ViewModel");
-                List<SimpleRecipe> simpleRecipes = new ArrayList<>();
-                for(RecipeWithIngredientsAndSteps fullRecipe :recipeWithIngredientsAndSteps){
+        mViewModel.getRecipes().observe(this, recipeWithIngredientsAndSteps -> {
+            Log.d(TAG,"Updating the list of recipes from LiveData from ViewModel");
+            List<SimpleRecipe> simpleRecipes = new ArrayList<>();
+            Log.d(TAG, "Live data object size: " + recipeWithIngredientsAndSteps.size());
+            for(RecipeWithIngredientsAndSteps fullRecipe :recipeWithIngredientsAndSteps){
 
-                    List<SimpleIngredient> simpleIngredients = new ArrayList<>();
-                    List<SimpleStep> simpleSteps = new ArrayList<>();
-                    for(Ingredient ingredient : fullRecipe.ingredients){
-                        SimpleIngredient simpleIngredient = new SimpleIngredient(ingredient.getIngredientId(),
-                                ingredient.getQuantity(), ingredient.getMeasure(), ingredient.getIngredientName());
-                        simpleIngredients.add(simpleIngredient);
-                    }
-
-                    for(Step step : fullRecipe.steps){
-                        SimpleStep simpleStep = new SimpleStep(step.getStepId(), step.getShortDescription(),
-                                step.getDescription(), step.getVideoUrl(), step.getThumbnailUrl());
-                        simpleSteps.add(simpleStep);
-                    }
-
-                    SimpleRecipe simpleRecipe = new SimpleRecipe(fullRecipe.recipe.getRecipeId(),
-                            fullRecipe.recipe.getRecipeName(), simpleIngredients, simpleSteps,
-                            fullRecipe.recipe.getServings(), fullRecipe.recipe.getImage());
-                    simpleRecipes.add(simpleRecipe);
+                List<SimpleIngredient> simpleIngredients = new ArrayList<>();
+                List<SimpleStep> simpleSteps = new ArrayList<>();
+                for(Ingredient ingredient : fullRecipe.ingredients){
+                    SimpleIngredient simpleIngredient = new SimpleIngredient(ingredient.getIngredientId(),
+                            ingredient.getQuantity(), ingredient.getMeasure(), ingredient.getIngredientName());
+                    simpleIngredients.add(simpleIngredient);
                 }
 
-                mSimpleRecipes = simpleRecipes;
+                for(Step step : fullRecipe.steps){
+                    SimpleStep simpleStep = new SimpleStep(step.getStepId(), step.getShortDescription(),
+                            step.getDescription(), step.getVideoUrl(), step.getThumbnailUrl());
+                    simpleSteps.add(simpleStep);
+                }
 
-
-                mAdapter.setRecipes(mSimpleRecipes);
+                SimpleRecipe simpleRecipe = new SimpleRecipe(fullRecipe.recipe.getRecipeId(),
+                        fullRecipe.recipe.getRecipeName(), simpleIngredients, simpleSteps,
+                        fullRecipe.recipe.getServings(), fullRecipe.recipe.getImage());
+                simpleRecipes.add(simpleRecipe);
             }
+
+            mSimpleRecipes = simpleRecipes;
+            Log.d(TAG, "Recipes size: " + simpleRecipes.size());
+
+
+            mAdapter.setRecipes(mSimpleRecipes);
         });
 
 
         return rootView;
+    }
+
+    public int getSmallestScreenWidth(){
+        return 0;
     }
 
     public void setupViewModel() {

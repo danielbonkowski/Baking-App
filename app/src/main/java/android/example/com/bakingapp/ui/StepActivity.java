@@ -18,6 +18,7 @@ public class StepActivity extends AppCompatActivity {
 
     private static final String SIMPLE_RECIPE_KEY = "simple_recipe";
     private static final String POSITION_KEY = "position";
+    private static final int INTRODUCTION = 1;
 
     int mPosition;
     SimpleRecipe mSimpleRecipe;
@@ -82,6 +83,7 @@ public class StepActivity extends AppCompatActivity {
 
         FragmentInstructions fragmentInstructions = new FragmentInstructions();
         fragmentInstructions.setInstructions(mSimpleRecipe.getSteps().get(mPosition).getDescription());
+        fragmentInstructions.setStep(mPosition);
         fragmentManager.beginTransaction()
                 .add(R.id.ingredients_container, fragmentInstructions)
                 .commit();
@@ -113,6 +115,7 @@ public class StepActivity extends AppCompatActivity {
 
         FragmentInstructions fragmentInstructions = new FragmentInstructions();
         fragmentInstructions.setInstructions(mSimpleRecipe.getSteps().get(mPosition).getDescription());
+        fragmentInstructions.setStep(mPosition);
         fragmentManager.beginTransaction()
                 .replace(R.id.ingredients_container, fragmentInstructions)
                 .commit();

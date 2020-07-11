@@ -19,7 +19,7 @@ public interface RecipeDao {
     public LiveData<List<RecipeWithIngredientsAndSteps>> getRecipesWithIngredientsAndSteps();
 
     @Query("SELECT * FROM recipe WHERE recipe_id = :id")
-    public LiveData<Recipe> getRecipe(int id);
+    public Recipe getRecipe(int id);
 
     @Insert
     void insertRecipe(Recipe recipe);

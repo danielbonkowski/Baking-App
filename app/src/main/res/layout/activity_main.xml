@@ -11,6 +11,24 @@
     <FrameLayout
         android:id="@+id/recipes_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent">
+    </FrameLayout>
+
+    <!--<ProgressBar
+        android:id="@+id/allRecipes_progress_bar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recipes_container"
+        app:layout_constraintStart_toStartOf="@+id/recipes_container"
+        app:layout_constraintTop_toTopOf="parent" />
+    <TextView
+        android:id="@+id/allRecipes_error_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"/>-->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
 

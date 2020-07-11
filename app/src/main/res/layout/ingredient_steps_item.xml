@@ -4,16 +4,16 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
-    android:padding="4dp">
+    android:background="@drawable/gradient1"
+    android:layout_marginBottom="1dp"
+    android:padding="8dp">
     <TextView
-        android:id="@+id/ingredient_widget_quantity"
+        android:id="@+id/ingredient_steps_quantity"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="2"
         android:gravity="center"
         tools:text="300"
-        android:textSize="16sp"
         android:textColor="@color/colorPrimaryText"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
@@ -23,25 +23,23 @@
         />
 
     <TextView
-        android:id="@+id/ingredient_widget_measure"
+        android:id="@+id/ingredient_steps_measure"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:gravity="center"
+        android:textColor="@color/colorPrimaryText"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
-        tools:text="grams"
-        android:textSize="16sp"
-        android:textColor="@color/colorPrimaryText"/>
+        tools:text="grams"/>
 
     <TextView
-        android:id="@+id/ingredient_widget_name"
+        android:id="@+id/ingredient_steps_name"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="6"
-        tools:text="Nutella or other chocolate-hazelnut spread"
-        android:textSize="16sp"
         android:textColor="@color/colorPrimaryText"
+        tools:text="Nutella or other chocolate-hazelnut spread"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"/>
 </LinearLayout>

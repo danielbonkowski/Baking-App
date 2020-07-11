@@ -76,9 +76,9 @@ class LinearLayoutRemoteViewsFactory implements RemoteViewsService.RemoteViewsFa
         String fullMeasureName = RecipeUtilities.getFullMeasureName(mContext, quantity, measureType);
         String stringQuantity = RecipeUtilities.getQuantity(quantity);
 
-        views.setTextViewText(R.id.ingredient_quantity, stringQuantity);
-        views.setTextViewText(R.id.ingredient_measure, fullMeasureName);
-        views.setTextViewText(R.id.ingredient_name, ingredientName);
+        views.setTextViewText(R.id.ingredient_widget_quantity, stringQuantity);
+        views.setTextViewText(R.id.ingredient_widget_measure, fullMeasureName);
+        views.setTextViewText(R.id.ingredient_widget_name, ingredientName);
 
         return views;
     }

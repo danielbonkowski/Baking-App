@@ -14,10 +14,13 @@ import androidx.fragment.app.Fragment;
 public class FragmentInstructions extends Fragment {
 
     private String mInstructions;
+    private int mStepNr;
 
     public FragmentInstructions(){
 
     }
+
+    public void setStep(int position) { mStepNr = position; }
 
     public void setInstructions(String instructions){
         mInstructions = instructions;
@@ -31,8 +34,15 @@ public class FragmentInstructions extends Fragment {
 
         TextView textView = (TextView) rootView.findViewById(R.id.instructions_text_view);
 
-        textView.setText(mInstructions);
+        textView.setText(getInstructions());
 
         return rootView;
+    }
+
+    private String getInstructions(){
+        if(mStepNr == 0){
+            return mInstructions;
+        }
+        return mInstructions.replaceFirst("\\d+", String.valueOf(mStepNr));
     }
 }

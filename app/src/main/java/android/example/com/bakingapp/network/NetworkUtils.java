@@ -7,6 +7,7 @@ import android.example.com.bakingapp.listingModel.SimpleIngredient;
 import android.example.com.bakingapp.listingModel.SimpleStep;
 import android.example.com.bakingapp.roomModel.Ingredient;
 import android.example.com.bakingapp.roomModel.Recipe;
+import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.example.com.bakingapp.roomModel.Step;
 import android.util.Log;
 
@@ -60,11 +61,20 @@ public class NetworkUtils {
 
                         for(SimpleRecipe simpleRecipe : mySimpleRecipes){
 
-                            LiveData<Recipe> recipeLiveData = mDb.recipeDao().getRecipe(simpleRecipe.getId());
+                            Recipe recipe = mDb.recipeDao().getRecipe(simpleRecipe.getId());
 
 
-                            if(recipeLiveData == null){
-                                Log.d(TAG, "Live Data Object: " + recipeLiveData.toString());
+
+
+                            if(recipe == null){
+                                Log.d(TAG, "Recipe id: " + simpleRecipe.getId() + " is not in db");
+                            }else{
+                                Log.d(TAG, "Recipe id: " + recipe.getRecipeId() + " is in db");
+                                Log.d(TAG, "Recipe id to insert: " + simpleRecipe.getId());
+                            }
+
+                            if(recipe == null){
+                                Log.d(TAG, "Recipe Live Data is null, mySipmleRecipes size: " + mySimpleRecipes.size());
                                 mDb.recipeDao().insertRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
                                         simpleRecipe.getServings(), simpleRecipe.getImage()));
 
@@ -76,6 +86,22 @@ public class NetworkUtils {
                                 }
                                 for(SimpleStep simpleStep : simpleRecipe.getSteps()){
                                     mDb.recipeDao().insertStep(new Step(simpleRecipe.getId(),
+                                            simpleStep.getShortDescription(), simpleStep.getDescription(),
+                                            simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
+                                }
+                            }else{
+
+                                mDb.recipeDao().updateRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
+                                        simpleRecipe.getServings(), simpleRecipe.getImage()));
+
+
+                                for(SimpleIngredient simpleIngredient : simpleRecipe.getIngredients()){
+                                    mDb.recipeDao().updateIngredient(new Ingredient(simpleRecipe.getId(),
+                                            simpleIngredient.getQuantity(), simpleIngredient.getMeasure(),
+                                            simpleIngredient.getName()));
+                                }
+                                for(SimpleStep simpleStep : simpleRecipe.getSteps()){
+                                    mDb.recipeDao().updateStep(new Step(simpleRecipe.getId(),
                                             simpleStep.getShortDescription(), simpleStep.getDescription(),
                                             simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
                                 }
