@@ -1,6 +1,7 @@
 package android.example.com.bakingapp.ui;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleIngredient;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
@@ -10,6 +11,7 @@ import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.example.com.bakingapp.roomModel.Step;
 import android.example.com.bakingapp.viewModel.AllRecipesViewModel;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -67,8 +70,16 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
 
+        RecyclerView.LayoutManager layoutManager = null;
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        double smallestScreenWith = getSmallestScreenWidth();
+        Log.d(TAG, "Smallest screen width: " + smallestScreenWith);
+        if(smallestScreenWith >= 600){
+            layoutManager = new GridLayoutManager(getContext(), 3, RecyclerView.VERTICAL, false);
+        }else {
+           layoutManager  = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        }
+
 
         mAdapter = new AllRecipesAdapter(getContext(), this);
         mAdapter.setRecipes(mSimpleRecipes);
@@ -117,8 +128,9 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
         return rootView;
     }
 
-    public int getSmallestScreenWidth(){
-        return 0;
+    public double getSmallestScreenWidth(){
+        Configuration configuration = getActivity().getApplicationContext().getResources().getConfiguration();
+        return configuration.smallestScreenWidthDp;
     }
 
     public void setupViewModel() {
