@@ -12,4 +12,5 @@
     <string name="servings">Servings</string>
     <string name="steps_label">Steps</string>
     <string name="ingredients_label">Ingredients</string>
+    <string name="recipe_list_error">The recipe list is empty.\n Check your Internet connection and try again.</string>
 </resources>

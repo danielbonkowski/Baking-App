@@ -61,6 +61,7 @@ public class NetworkUtils {
 
                         for(SimpleRecipe simpleRecipe : mySimpleRecipes){
 
+
                             Recipe recipe = mDb.recipeDao().getRecipe(simpleRecipe.getId());
 
 

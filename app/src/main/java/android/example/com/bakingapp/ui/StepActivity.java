@@ -1,12 +1,19 @@
 package android.example.com.bakingapp.ui;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import android.content.Context;
 import android.content.Intent;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
+import android.example.com.bakingapp.network.AppExecutors;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +29,7 @@ public class StepActivity extends AppCompatActivity {
 
     int mPosition;
     SimpleRecipe mSimpleRecipe;
+    boolean mIsConnectedToInternet;
 
 
     @Override
@@ -44,15 +52,30 @@ public class StepActivity extends AppCompatActivity {
         }
         Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
 
-        addFragments();
-
-        previousButtonClickListener();
-        nextButtonClickListener();
+        addFragmentsAsynchronously();
+        addPreviousButtonClickListener();
+        addNextButtonClickListener();
 
         setTitle(mSimpleRecipe.getName());
     }
 
-    private void nextButtonClickListener() {
+    private void addFragmentsAsynchronously(){
+        AppExecutors.getInstance().networkIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mIsConnectedToInternet = isConnectedToInternet();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        addFragments();
+                    }
+                });
+
+            }
+        });
+    }
+
+    private void addNextButtonClickListener() {
         Button nextButton = findViewById(R.id.button_next);
         nextButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +88,7 @@ public class StepActivity extends AppCompatActivity {
         });
     }
 
-    private void previousButtonClickListener() {
+    private void addPreviousButtonClickListener() {
         Button previousButton = findViewById(R.id.button_previous);
         previousButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +114,9 @@ public class StepActivity extends AppCompatActivity {
 
 
         String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
-        if(videoUrl != null && !videoUrl.isEmpty()){
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && videoUrl != null
+                && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);
@@ -99,8 +124,15 @@ public class StepActivity extends AppCompatActivity {
                     .add(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
                     .commit();
 
-        }else{
+        }else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M &&
+                videoUrl != null && !videoUrl.isEmpty()){
+            FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
+            fragmentMediaPlayer.setVideoUrl(videoUrl);
+            fragmentManager.beginTransaction()
+                    .add(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
+                    .commit();
 
+        }else{
             FragmentCookingGraphic fragmentCookingGraphic = new FragmentCookingGraphic();
             fragmentManager.beginTransaction()
                     .add(R.id.media_player_or_graphic_container, fragmentCookingGraphic)
@@ -108,6 +140,19 @@ public class StepActivity extends AppCompatActivity {
         }
 
 
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    private boolean isConnectedToInternet(){
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager == null){
+            return false;
+        }
+
+        Network network = connectivityManager.getActiveNetwork();
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return network != null && networkInfo.isConnected();
     }
 
     private void replaceFragments(){
@@ -121,7 +166,7 @@ public class StepActivity extends AppCompatActivity {
                 .commit();
 
         String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
-        if(videoUrl != null && !videoUrl.isEmpty()){
+        if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);

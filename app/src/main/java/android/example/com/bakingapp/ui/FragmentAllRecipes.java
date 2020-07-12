@@ -17,6 +17,8 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,7 +37,10 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
     private static final String TAG = FragmentAllRecipes.class.getSimpleName();
     private List<SimpleRecipe> mSimpleRecipes;
     private OnRecipeClickListener mCallback;
+    private RecyclerView mRecyclerView;
     private AllRecipesAdapter mAdapter;
+    private TextView mErrorTextView;
+    private ProgressBar mProgressBar;
 
     public interface OnRecipeClickListener{
         void onRecipeSelected(SimpleRecipe simpleRecipe);
@@ -45,10 +50,37 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
     }
 
+    private void displayProgressBar(){
+        if(mProgressBar != null && mErrorTextView != null){
+            mProgressBar.setVisibility(View.VISIBLE);
+            mErrorTextView.setVisibility(View.GONE);
+        }
+    }
+
+    private void displayErrorMessage(){
+        if(mProgressBar != null && mErrorTextView != null){
+            Log.d(TAG, "Display error message");
+            mProgressBar.setVisibility(View.GONE);
+            mErrorTextView.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void hideProgressBar(){
+        if(mProgressBar != null){
+            mProgressBar.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideErrorMessage(){
+        if(mErrorTextView != null){
+            mErrorTextView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setupViewModel();
     }
 
     @Override
@@ -67,8 +99,11 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-
         View rootView = inflater.inflate(R.layout.fragment_recipes, container, false);
+
+        mProgressBar = rootView.findViewById(R.id.allRecipes_progress_bar);
+        mErrorTextView = rootView.findViewById(R.id.allRecipes_error_text_view);
+        displayProgressBar();
 
         RecyclerView.LayoutManager layoutManager = null;
 
@@ -81,13 +116,19 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
         }
 
 
+
         mAdapter = new AllRecipesAdapter(getContext(), this);
         mAdapter.setRecipes(mSimpleRecipes);
 
-        RecyclerView mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
-
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
+
+        hideProgressBar();
+        if(mSimpleRecipes == null || mSimpleRecipes.size() == 0){
+            displayErrorMessage();
+        }
+
 
 
         AllRecipesViewModel mViewModel = ViewModelProviders.of(requireActivity()).get(AllRecipesViewModel.class);
@@ -122,6 +163,11 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
 
             mAdapter.setRecipes(mSimpleRecipes);
+            if(mSimpleRecipes == null || mSimpleRecipes.size() == 0){
+                displayErrorMessage();
+            }else {
+                hideErrorMessage();
+            }
         });
 
 
@@ -131,10 +177,6 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
     public double getSmallestScreenWidth(){
         Configuration configuration = getActivity().getApplicationContext().getResources().getConfiguration();
         return configuration.smallestScreenWidthDp;
-    }
-
-    public void setupViewModel() {
-
     }
 
     @Override
