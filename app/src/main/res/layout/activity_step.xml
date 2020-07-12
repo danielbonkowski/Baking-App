@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
                 <Button
-                    android:background="@drawable/gradient3"
+                    android:background="@drawable/recipe_selector"
                     android:id="@+id/button_previous"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                 android:layout_weight="1">
                 <Button
                     android:id="@+id/button_next"
-                    android:background="@drawable/gradient3"
+                    android:background="@drawable/recipe_selector"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/button_next"

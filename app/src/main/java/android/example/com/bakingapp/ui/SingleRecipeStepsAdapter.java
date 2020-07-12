@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class SingleRecipeStepsAdapter extends RecyclerView.Adapter<SingleRecipeStepsAdapter.SingleRecipeViewHolder> {
@@ -62,12 +63,14 @@ public class SingleRecipeStepsAdapter extends RecyclerView.Adapter<SingleRecipeS
     public class SingleRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         TextView description;
+        CardView cardView;
 
         public SingleRecipeViewHolder(@NonNull View itemView) {
             super(itemView);
             description = itemView.findViewById(R.id.step_description_text_view);
+            cardView = itemView.findViewById(R.id.materialCardViewSteps);
 
-            itemView.setOnClickListener(this);
+            cardView.setOnClickListener(this);
         }
 
         @Override

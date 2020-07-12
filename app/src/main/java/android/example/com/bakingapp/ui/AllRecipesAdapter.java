@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -76,6 +77,7 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
         TextView stepsLabel;
         TextView ingredients;
         TextView ingredientsLabel;
+        CardView cardView;
 
 
         public RecipesViewHolder(@NonNull View itemView) {
@@ -87,8 +89,9 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
             stepsLabel = itemView.findViewById(R.id.recipes_item_recipe_steps_label);
             ingredients = itemView.findViewById(R.id.recipes_item_recipe_ingredients);
             ingredientsLabel = itemView.findViewById(R.id.recipes_item_recipe_ingredients_label);
+            cardView = itemView.findViewById(R.id.materialCardViewAllRecipes);
 
-            itemView.setOnClickListener(this);
+            cardView.setOnClickListener(this);
         }
 
         @Override
