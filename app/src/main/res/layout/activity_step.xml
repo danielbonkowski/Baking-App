@@ -14,15 +14,16 @@
 
         <FrameLayout
             android:id="@+id/media_player_or_graphic_container"
-            android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:minHeight="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             tools:text="Media Player" />
 
         <FrameLayout
             android:id="@+id/ingredients_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"
