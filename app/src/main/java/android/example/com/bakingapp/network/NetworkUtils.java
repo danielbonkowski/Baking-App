@@ -1,6 +1,7 @@
 package android.example.com.bakingapp.network;
 
 import android.content.Context;
+import android.example.com.bakingapp.IdlingResource.SimpleIdlingResource;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.roomModel.AppDatabase;
 import android.example.com.bakingapp.listingModel.SimpleIngredient;
@@ -11,6 +12,7 @@ import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.example.com.bakingapp.roomModel.Step;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,8 +31,16 @@ public class NetworkUtils {
     private static final String RECIPE_LISTING_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
     private static AppDatabase mDb;
 
+    public interface DownloaderCallback{
+        void onDownloaded(boolean isFinished);
+    }
 
-    public static void getRecipesFromApi(Context context){
+    public static void getRecipesFromApi(Context context, final DownloaderCallback callback,
+                                         @Nullable final SimpleIdlingResource idlingResource){
+
+        if(idlingResource != null){
+            idlingResource.setIdleState(false);
+        }
 
         mDb = AppDatabase.getInstance(context);
 
@@ -105,6 +115,12 @@ public class NetworkUtils {
                                     mDb.recipeDao().updateStep(new Step(simpleRecipe.getId(),
                                             simpleStep.getShortDescription(), simpleStep.getDescription(),
                                             simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
+                                }
+                            }
+                            if (callback != null) {
+                                callback.onDownloaded(true);
+                                if (idlingResource != null) {
+                                    idlingResource.setIdleState(true);
                                 }
                             }
                         }

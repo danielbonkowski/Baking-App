@@ -1,9 +1,11 @@
 package android.example.com.bakingapp.ui;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.example.com.bakingapp.IdlingResource.SimpleIdlingResource;
 import android.example.com.bakingapp.widget.BakingService;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
@@ -12,21 +14,35 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class AllRecipesActivity extends AppCompatActivity implements
-FragmentAllRecipes.OnRecipeClickListener{
+FragmentAllRecipes.OnRecipeClickListener,
+        NetworkUtils.DownloaderCallback {
 
     public static final String INTENT_EXTRA_RECIPE = "Selected_recipe";
     private static final String TAG = AllRecipesActivity.class.getSimpleName();
+    Bundle mSavedInstanceState;
+
+    @Nullable
+    private static SimpleIdlingResource mSimpleIdlingResource;
+
+    @Nullable
+    public static SimpleIdlingResource getIdlingResource(){
+        if(mSimpleIdlingResource == null){
+            mSimpleIdlingResource = new SimpleIdlingResource();
+        }
+        return mSimpleIdlingResource;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mSavedInstanceState = savedInstanceState;
 
         Intent widgetIntent = getIntent();
         if(savedInstanceState == null){
 
-            NetworkUtils.getRecipesFromApi(getApplicationContext());
+            NetworkUtils.getRecipesFromApi(getApplicationContext(), this, mSimpleIdlingResource);
 
             FragmentAllRecipes fragmentAllRecipes = new FragmentAllRecipes();
 
@@ -61,5 +77,10 @@ FragmentAllRecipes.OnRecipeClickListener{
         final Intent intent = new Intent(this, SingleRecipeActivity.class);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void onDownloaded(boolean isFinished) {
+
     }
 }

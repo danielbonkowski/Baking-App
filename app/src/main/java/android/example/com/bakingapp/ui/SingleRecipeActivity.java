@@ -38,6 +38,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
             if(receivedIntent != null){
 
                 SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
+                setTitle(simpleRecipe.getName());
                 BakingService.startActionUpdateRecipe(this, simpleRecipe);
 
                 FragmentSingleRecipe fragmentSingleRecipe = new FragmentSingleRecipe();
@@ -48,7 +49,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
                         .add(R.id.single_recipe_container, fragmentSingleRecipe)
                         .commit();
 
-                setTitle(simpleRecipe.getName());
+
             }
         }else{
             Intent receivedIntent = getIntent();
@@ -56,6 +57,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
             if(receivedIntent != null){
 
                 SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
+                setTitle(simpleRecipe.getName());
                 BakingService.startActionUpdateRecipe(this, simpleRecipe);
 
                 FragmentSingleRecipe fragmentSingleRecipe = new FragmentSingleRecipe();
@@ -92,7 +94,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
                             .commit();
                 }
 
-                setTitle(simpleRecipe.getName());
+
             }
         }
     }

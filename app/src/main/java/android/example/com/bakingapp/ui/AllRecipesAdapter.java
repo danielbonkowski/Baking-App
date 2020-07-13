@@ -92,6 +92,7 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
             cardView = itemView.findViewById(R.id.materialCardViewAllRecipes);
 
             cardView.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
