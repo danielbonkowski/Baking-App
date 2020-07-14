@@ -39,24 +39,26 @@ public class StepDisplayTest {
             new ActivityTestRule<>(AllRecipesActivity.class);
 
     int TESTED_ITEM = 0;
-    String RECIPE_NAME = "Nutella Pie";
     int FIRST_STEP_POSITION = 0;
     private IdlingResource mIdlingResource;
-    int FIRST_ITEM_POSITION = 0;
 
     @Before
     public void registerIdlingResource(){
+        mAllRecipesActivity.getActivity()
+                .getSupportFragmentManager().beginTransaction();
+
         mIdlingResource = mAllRecipesActivity.getActivity().getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
     }
 
     @Test
-    public void clickRecipeItem_ReturnToAllRecipesActivity(){
+    public void clickStepItem_DisplaysInstructionsAndPlayerOrGraphic(){
 
+        onView(withId(R.id.recipes_recycler_view)).check(matches(isDisplayed()));
         onView(withId(R.id.recipes_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(TESTED_ITEM, click()));
 
-
+        onView(withId(R.id.single_recipe_container)).check(matches(isDisplayed()));
         onView(withId(R.id.single_recipe_steps_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(FIRST_STEP_POSITION, click()));
 

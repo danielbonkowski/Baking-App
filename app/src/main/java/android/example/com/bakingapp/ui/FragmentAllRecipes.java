@@ -35,6 +35,11 @@ import java.util.List;
 public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.OnRecipeListener {
 
     private static final String TAG = FragmentAllRecipes.class.getSimpleName();
+
+    public void setSimpleRecipes(List<SimpleRecipe> simpleRecipes) {
+        this.mSimpleRecipes = simpleRecipes;
+    }
+
     private List<SimpleRecipe> mSimpleRecipes;
     private OnRecipeClickListener mCallback;
     private RecyclerView mRecyclerView;
@@ -49,6 +54,8 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
     public FragmentAllRecipes(){
 
     }
+
+
 
     private void displayProgressBar(){
         if(mProgressBar != null && mErrorTextView != null){

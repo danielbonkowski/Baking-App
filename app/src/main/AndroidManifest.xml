@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_pie_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <receiver android:name=".widget.BakingAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -21,13 +22,18 @@
                 android:resource="@xml/baking_app_widget_provider_info" />
         </receiver>
 
-        <service android:enabled="true" android:name=".widget.BakingService"/>
+        <service
+            android:name=".widget.BakingService"
+            android:enabled="true" />
 
-        <activity android:name=".ui.StepActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.SingleRecipeActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".ui.AllRecipesActivity"
+        <activity
+            android:name=".ui.StepActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.SingleRecipeActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".ui.AllRecipesActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,8 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".widget.LinearWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <service
+            android:name=".widget.LinearWidgetService"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 
 </manifest>

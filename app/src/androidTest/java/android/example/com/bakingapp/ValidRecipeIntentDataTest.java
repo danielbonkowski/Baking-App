@@ -18,10 +18,14 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intended;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasComponent;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasData;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtra;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasExtras;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.hamcrest.Matchers.allOf;
 
@@ -30,7 +34,6 @@ public class ValidRecipeIntentDataTest {
 
     int TESTED_ITEM = 0;
     private IdlingResource mIdlingResource;
-    int FIRST_ITEM_POSITION = 0;
 
     @Rule
     public IntentsTestRule<AllRecipesActivity> mActivityTestRule =
@@ -38,6 +41,9 @@ public class ValidRecipeIntentDataTest {
 
     @Before
     public void registerIdlingResource(){
+        mActivityTestRule.getActivity()
+                .getSupportFragmentManager().beginTransaction();
+
         mIdlingResource = mActivityTestRule.getActivity().getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
     }
@@ -45,11 +51,13 @@ public class ValidRecipeIntentDataTest {
     //click is used to verify that the recyclerview is not empty
     @Test
     public void selectRecipeItem_CheckIfSendsData(){
+        onView(withId(R.id.recipes_recycler_view)).check(matches(isDisplayed()));
         onView(withId(R.id.recipes_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(TESTED_ITEM, click()));
 
         intended(allOf(
-                hasComponent(SingleRecipeActivity.class.getName())));
+                hasComponent(SingleRecipeActivity.class.getName()),
+                hasExtraWithKey(AllRecipesActivity.INTENT_EXTRA_RECIPE)));
     }
 
     @After

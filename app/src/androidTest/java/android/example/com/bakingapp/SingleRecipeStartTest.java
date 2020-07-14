@@ -40,18 +40,26 @@ public class SingleRecipeStartTest {
     int TESTED_ITEM = 0;
     String RECIPE_NAME = "Nutella Pie";
     private IdlingResource mIdlingResource;
-    int FIRST_ITEM_POSITION = 0;
 
     @Before
     public void registerIdlingResource(){
+        mActivityTestRule.getActivity()
+                .getSupportFragmentManager().beginTransaction();
+
         mIdlingResource = mActivityTestRule.getActivity().getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
     }
 
     @Test
-    public void clickRecipeItem_OpensCorrectSingleRecipeActivity(){
+    public void clickRecipeItem_OpensCorrectSingleRecipeActivity() {
+        onView(withId(R.id.recipes_recycler_view)).check(matches(isDisplayed()));
         onView(withId(R.id.recipes_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(TESTED_ITEM, click()));
+
+
+        onView(withId(R.id.single_recipe_container)).check(matches(isDisplayed()));
+        onView(allOf(instanceOf(TextView.class), withParent(matchToolbarTitle(RECIPE_NAME))))
+                .check(matches(isDisplayed()));
 
     }
 

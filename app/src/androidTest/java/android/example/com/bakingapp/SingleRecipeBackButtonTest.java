@@ -39,12 +39,13 @@ public class SingleRecipeBackButtonTest {
             new ActivityTestRule<>(AllRecipesActivity.class);
 
     int TESTED_ITEM = 0;
-    String RECIPE_NAME = "Nutella Pie";
     private IdlingResource mIdlingResource;
-    int FIRST_ITEM_POSITION = 0;
 
     @Before
     public void registerIdlingResource(){
+        mAllRecipesActivity.getActivity()
+                .getSupportFragmentManager().beginTransaction();
+
         mIdlingResource = mAllRecipesActivity.getActivity().getIdlingResource();
         Espresso.registerIdlingResources(mIdlingResource);
     }
@@ -52,16 +53,13 @@ public class SingleRecipeBackButtonTest {
     @Test
     public void clickRecipeItem_ReturnToAllRecipesActivity(){
 
+        onView(withId(R.id.recipes_recycler_view)).check(matches(isDisplayed()));
         onView(withId(R.id.recipes_recycler_view))
                 .perform(RecyclerViewActions.actionOnItemAtPosition(TESTED_ITEM, click()));
 
-        onView(allOf(instanceOf(TextView.class), withParent(matchToolbarTitle(RECIPE_NAME))))
-                .check(matches(isDisplayed()));
-
         pressBack();
 
-        onView(withId(R.id.recipes_recycler_view))
-                .check(matches(isDisplayed()));
+        onView(withId(R.id.recipes_recycler_view)).check(matches(isDisplayed()));
     }
 
     @After
