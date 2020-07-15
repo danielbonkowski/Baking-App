@@ -4,19 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import android.content.Context;
 import android.content.Intent;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.network.AppExecutors;
 import android.example.com.bakingapp.network.NetworkUtils;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 public class StepActivity extends AppCompatActivity {
@@ -25,7 +19,6 @@ public class StepActivity extends AppCompatActivity {
 
     private static final String SIMPLE_RECIPE_KEY = "simple_recipe";
     private static final String POSITION_KEY = "position";
-    private static final int INTRODUCTION = 1;
 
     int mPosition;
     SimpleRecipe mSimpleRecipe;
@@ -60,43 +53,29 @@ public class StepActivity extends AppCompatActivity {
     }
 
     private void addFragmentsAsynchronously(){
-        AppExecutors.getInstance().networkIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mIsConnectedToInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        addFragments();
-                    }
-                });
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            mIsConnectedToInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
+            runOnUiThread(() -> addFragments());
 
-            }
         });
     }
 
     private void addNextButtonClickListener() {
         Button nextButton = findViewById(R.id.button_next);
-        nextButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mPosition < mSimpleRecipe.getSteps().size() - 1){
-                    ++mPosition;
-                    replaceFragments();
-                }
+        nextButton.setOnClickListener(v -> {
+            if(mPosition < mSimpleRecipe.getSteps().size() - 1){
+                ++mPosition;
+                replaceFragments();
             }
         });
     }
 
     private void addPreviousButtonClickListener() {
         Button previousButton = findViewById(R.id.button_previous);
-        previousButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mPosition > 0){
-                    --mPosition;
-                    replaceFragments();
-                }
+        previousButton.setOnClickListener(v -> {
+            if(mPosition > 0){
+                --mPosition;
+                replaceFragments();
             }
         });
     }

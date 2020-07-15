@@ -1,23 +1,18 @@
 package android.example.com.bakingapp.listingModel;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 public class SimpleStep implements Serializable {
 
-    private int id;
-    private String shortDescription;
-    private String description;
+    private final int id;
+    private final String shortDescription;
+    private final String description;
     @SerializedName("videoURL")
-    private String videoUrl;
+    private final String videoUrl;
     @SerializedName("thumbnailURL")
-    private String thumbnailUrl;
+    private final String thumbnailUrl;
 
     public SimpleStep(int id, String shortDescription, String description, String videoUrl, String thumbnailUrl) {
         this.id = id;
@@ -25,10 +20,6 @@ public class SimpleStep implements Serializable {
         this.description = description;
         this.videoUrl = videoUrl;
         this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getShortDescription() {

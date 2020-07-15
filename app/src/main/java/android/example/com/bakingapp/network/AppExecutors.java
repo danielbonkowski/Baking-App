@@ -1,7 +1,5 @@
 package android.example.com.bakingapp.network;
 
-import com.google.android.exoplayer2.ExoPlayer;
-
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 

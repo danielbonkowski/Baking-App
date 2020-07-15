@@ -21,15 +21,11 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
     private static final int INTRODUCTION = 1;
 
     List<SimpleRecipe> mSimpleRecipes;
-    Context mContext;
-    private OnRecipeListener mOnRecipeListener;
+    final Context mContext;
+    private final OnRecipeListener mOnRecipeListener;
 
     public interface OnRecipeListener {
         void onRecipeClick(int position);
-    };
-
-    public List<SimpleRecipe> getRecipes(){
-        return mSimpleRecipes;
     }
 
     public void setRecipes(List<SimpleRecipe> simpleRecipes){
@@ -70,14 +66,13 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
 
     public class RecipesViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        TextView recipeName;
-        TextView servings;
-        TextView servingsLabel;
-        TextView steps;
-        TextView stepsLabel;
-        TextView ingredients;
-        TextView ingredientsLabel;
-        CardView cardView;
+        final TextView recipeName;
+        final TextView servings;
+        final TextView servingsLabel;
+        final TextView steps;
+        final TextView stepsLabel;
+        final TextView ingredients;
+        final CardView cardView;
 
 
         public RecipesViewHolder(@NonNull View itemView) {
@@ -88,7 +83,6 @@ public class AllRecipesAdapter extends RecyclerView.Adapter<AllRecipesAdapter.Re
             steps = itemView.findViewById(R.id.recipes_item_recipe_steps);
             stepsLabel = itemView.findViewById(R.id.recipes_item_recipe_steps_label);
             ingredients = itemView.findViewById(R.id.recipes_item_recipe_ingredients);
-            ingredientsLabel = itemView.findViewById(R.id.recipes_item_recipe_ingredients_label);
             cardView = itemView.findViewById(R.id.materialCardViewAllRecipes);
 
             cardView.setOnClickListener(this);

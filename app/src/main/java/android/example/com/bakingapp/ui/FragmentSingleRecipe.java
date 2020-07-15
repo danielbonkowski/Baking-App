@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,8 +44,8 @@ public class FragmentSingleRecipe extends Fragment implements SingleRecipeStepsA
 
         View rootView = inflater.inflate(R.layout.fragment_single_recipe_steps, container, false);
 
-        RecyclerView ingredientsRecyclerView = (RecyclerView) rootView.findViewById(R.id.single_recipe_ingredients_recycler_view);
-        RecyclerView stepsRecyclerView = (RecyclerView) rootView.findViewById(R.id.single_recipe_steps_recycler_view);
+        RecyclerView ingredientsRecyclerView = rootView.findViewById(R.id.single_recipe_ingredients_recycler_view);
+        RecyclerView stepsRecyclerView = rootView.findViewById(R.id.single_recipe_steps_recycler_view);
 
 
         if(mSimpleRecipe != null){

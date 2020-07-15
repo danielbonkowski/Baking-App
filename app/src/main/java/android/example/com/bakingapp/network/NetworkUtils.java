@@ -16,6 +16,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -55,73 +57,70 @@ public class NetworkUtils {
 
         call.enqueue(new Callback<List<SimpleRecipe>>() {
             @Override
-            public void onResponse(Call<List<SimpleRecipe>> call, final Response<List<SimpleRecipe>> response) {
+            public void onResponse(@NotNull Call<List<SimpleRecipe>> call, @NotNull final Response<List<SimpleRecipe>> response) {
 
                 Log.d(TAG, "Getting API data...");
-                AppExecutors.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
+                AppExecutors.getInstance().diskIO().execute(() -> {
 
-                        if(!response.isSuccessful()){
-                            Log.d(TAG, "Code: " + response.code());
-                            return;
+                    if(!response.isSuccessful()){
+                        Log.d(TAG, "Code: " + response.code());
+                        return;
+                    }
+
+                    List<SimpleRecipe> mySimpleRecipes = response.body();
+
+                    for(SimpleRecipe simpleRecipe : mySimpleRecipes){
+
+
+                        Recipe recipe = mDb.recipeDao().getRecipe(simpleRecipe.getId());
+
+
+
+
+                        if(recipe == null){
+                            Log.d(TAG, "Recipe id: " + simpleRecipe.getId() + " is not in db");
+                        }else{
+                            Log.d(TAG, "Recipe id: " + recipe.getRecipeId() + " is in db");
+                            Log.d(TAG, "Recipe id to insert: " + simpleRecipe.getId());
                         }
 
-                        List<SimpleRecipe> mySimpleRecipes = response.body();
-
-                        for(SimpleRecipe simpleRecipe : mySimpleRecipes){
-
-
-                            Recipe recipe = mDb.recipeDao().getRecipe(simpleRecipe.getId());
+                        if(recipe == null){
+                            Log.d(TAG, "Recipe Live Data is null, mySimpleRecipes size: " + mySimpleRecipes.size());
+                            mDb.recipeDao().insertRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
+                                    simpleRecipe.getServings(), simpleRecipe.getImage()));
 
 
-
-
-                            if(recipe == null){
-                                Log.d(TAG, "Recipe id: " + simpleRecipe.getId() + " is not in db");
-                            }else{
-                                Log.d(TAG, "Recipe id: " + recipe.getRecipeId() + " is in db");
-                                Log.d(TAG, "Recipe id to insert: " + simpleRecipe.getId());
+                            for(SimpleIngredient simpleIngredient : simpleRecipe.getIngredients()){
+                                mDb.recipeDao().insertIngredient(new Ingredient(simpleRecipe.getId(),
+                                        simpleIngredient.getQuantity(), simpleIngredient.getMeasure(),
+                                        simpleIngredient.getName()));
                             }
-
-                            if(recipe == null){
-                                Log.d(TAG, "Recipe Live Data is null, mySimpleRecipes size: " + mySimpleRecipes.size());
-                                mDb.recipeDao().insertRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
-                                        simpleRecipe.getServings(), simpleRecipe.getImage()));
-
-
-                                for(SimpleIngredient simpleIngredient : simpleRecipe.getIngredients()){
-                                    mDb.recipeDao().insertIngredient(new Ingredient(simpleRecipe.getId(),
-                                            simpleIngredient.getQuantity(), simpleIngredient.getMeasure(),
-                                            simpleIngredient.getName()));
-                                }
-                                for(SimpleStep simpleStep : simpleRecipe.getSteps()){
-                                    mDb.recipeDao().insertStep(new Step(simpleRecipe.getId(),
-                                            simpleStep.getShortDescription(), simpleStep.getDescription(),
-                                            simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
-                                }
-                            }else{
-
-                                mDb.recipeDao().updateRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
-                                        simpleRecipe.getServings(), simpleRecipe.getImage()));
-
-
-                                for(SimpleIngredient simpleIngredient : simpleRecipe.getIngredients()){
-                                    mDb.recipeDao().updateIngredient(new Ingredient(simpleRecipe.getId(),
-                                            simpleIngredient.getQuantity(), simpleIngredient.getMeasure(),
-                                            simpleIngredient.getName()));
-                                }
-                                for(SimpleStep simpleStep : simpleRecipe.getSteps()){
-                                    mDb.recipeDao().updateStep(new Step(simpleRecipe.getId(),
-                                            simpleStep.getShortDescription(), simpleStep.getDescription(),
-                                            simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
-                                }
+                            for(SimpleStep simpleStep : simpleRecipe.getSteps()){
+                                mDb.recipeDao().insertStep(new Step(simpleRecipe.getId(),
+                                        simpleStep.getShortDescription(), simpleStep.getDescription(),
+                                        simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
                             }
-                            if (callback != null) {
-                                callback.onDownloaded(true);
-                                if (idlingResource != null) {
-                                    idlingResource.setIdleState(true);
-                                }
+                        }else{
+
+                            mDb.recipeDao().updateRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
+                                    simpleRecipe.getServings(), simpleRecipe.getImage()));
+
+
+                            for(SimpleIngredient simpleIngredient : simpleRecipe.getIngredients()){
+                                mDb.recipeDao().updateIngredient(new Ingredient(simpleRecipe.getId(),
+                                        simpleIngredient.getQuantity(), simpleIngredient.getMeasure(),
+                                        simpleIngredient.getName()));
+                            }
+                            for(SimpleStep simpleStep : simpleRecipe.getSteps()){
+                                mDb.recipeDao().updateStep(new Step(simpleRecipe.getId(),
+                                        simpleStep.getShortDescription(), simpleStep.getDescription(),
+                                        simpleStep.getVideoUrl(), simpleStep.getThumbnailUrl()));
+                            }
+                        }
+                        if (callback != null) {
+                            callback.onDownloaded(true);
+                            if (idlingResource != null) {
+                                idlingResource.setIdleState(true);
                             }
                         }
                     }
@@ -131,7 +130,7 @@ public class NetworkUtils {
             }
 
             @Override
-            public void onFailure(Call<List<SimpleRecipe>> call, Throwable t) {
+            public void onFailure(@NotNull Call<List<SimpleRecipe>> call, @NotNull Throwable t) {
                 Log.e(TAG, "Error getting json objects from server");
                 Log.e(TAG, t.getMessage());
             }

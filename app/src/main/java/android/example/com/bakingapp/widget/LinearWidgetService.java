@@ -13,8 +13,6 @@ import android.widget.RemoteViewsService;
 
 public class LinearWidgetService extends RemoteViewsService {
 
-    private static final String TAG = LinearWidgetService.class.getSimpleName();
-
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
         Log.d("TAG", "First ingredient is tested");
@@ -26,16 +24,13 @@ public class LinearWidgetService extends RemoteViewsService {
 class LinearLayoutRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private static final String TAG = LinearLayoutRemoteViewsFactory.class.getSimpleName();
 
-    Context mContext;
+    final Context mContext;
     SimpleRecipe mSimpleRecipe;
-    private int mWidgetId;
 
     public LinearLayoutRemoteViewsFactory(Context applicationContext, Intent intent) {
         Log.d(TAG, "First ingredient is tested");
         this.mContext = applicationContext;
         mSimpleRecipe = RecipeUtilities.getSimpleRecipe();
-        mWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID);
     }
 
     @Override

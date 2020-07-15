@@ -11,9 +11,7 @@ import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.example.com.bakingapp.roomModel.Step;
 import android.example.com.bakingapp.viewModel.AllRecipesViewModel;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,10 +32,6 @@ import java.util.List;
 public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.OnRecipeListener {
 
     private static final String TAG = FragmentAllRecipes.class.getSimpleName();
-
-    public void setSimpleRecipes(List<SimpleRecipe> simpleRecipes) {
-        this.mSimpleRecipes = simpleRecipes;
-    }
 
     private List<SimpleRecipe> mSimpleRecipes;
     private OnRecipeClickListener mCallback;
@@ -112,7 +105,7 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
         mErrorTextView = rootView.findViewById(R.id.allRecipes_error_text_view);
         displayProgressBar();
 
-        RecyclerView.LayoutManager layoutManager = null;
+        RecyclerView.LayoutManager layoutManager;
 
         double smallestScreenWith = getSmallestScreenWidth();
         Log.d(TAG, "Smallest screen width: " + smallestScreenWith);
@@ -127,7 +120,7 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
         mAdapter = new AllRecipesAdapter(getContext(), this);
         mAdapter.setRecipes(mSimpleRecipes);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recipes_recycler_view);
+        mRecyclerView = rootView.findViewById(R.id.recipes_recycler_view);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -139,7 +132,7 @@ public class FragmentAllRecipes extends Fragment implements AllRecipesAdapter.On
 
 
         AllRecipesViewModel mViewModel = ViewModelProviders.of(requireActivity()).get(AllRecipesViewModel.class);
-        mViewModel.getRecipes().observe(this, recipeWithIngredientsAndSteps -> {
+        mViewModel.getRecipes().observe(getViewLifecycleOwner(), recipeWithIngredientsAndSteps -> {
             Log.d(TAG,"Updating the list of recipes from LiveData from ViewModel");
             List<SimpleRecipe> simpleRecipes = new ArrayList<>();
             Log.d(TAG, "Live data object size: " + recipeWithIngredientsAndSteps.size());

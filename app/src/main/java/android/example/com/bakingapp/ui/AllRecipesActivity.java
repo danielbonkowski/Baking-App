@@ -19,7 +19,6 @@ FragmentAllRecipes.OnRecipeClickListener,
 
     public static final String INTENT_EXTRA_RECIPE = "Selected_recipe";
     private static final String TAG = AllRecipesActivity.class.getSimpleName();
-    Bundle mSavedInstanceState;
 
     @Nullable
     private static SimpleIdlingResource mSimpleIdlingResource;
@@ -37,7 +36,6 @@ FragmentAllRecipes.OnRecipeClickListener,
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSavedInstanceState = savedInstanceState;
 
         Intent widgetIntent = getIntent();
         if(savedInstanceState == null){
@@ -52,7 +50,7 @@ FragmentAllRecipes.OnRecipeClickListener,
                     .commit();
         }
 
-        if(widgetIntent != null && BakingService.ACTION_UPDATE_RECIPE  == widgetIntent.getAction()){
+        if(widgetIntent != null && BakingService.ACTION_UPDATE_RECIPE.equals(widgetIntent.getAction())){
 
             SimpleRecipe simpleRecipe = (SimpleRecipe) widgetIntent.getSerializableExtra(INTENT_EXTRA_RECIPE);
             if(simpleRecipe != null){

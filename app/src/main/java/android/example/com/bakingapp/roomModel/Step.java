@@ -14,14 +14,14 @@ public class Step implements Serializable {
     @ColumnInfo(name = "step_id")
     private int stepId;
     @ColumnInfo(name = "parent_recipe_id")
-    private int parentRecipeId;
+    private final int parentRecipeId;
     @ColumnInfo(name = "short_description")
-    private String shortDescription;
-    private String description;
+    private final String shortDescription;
+    private final String description;
     @ColumnInfo(name = "video_url")
-    private String videoUrl;
+    private final String videoUrl;
     @ColumnInfo(name = "thumbnail_url")
-    private String thumbnailUrl;
+    private final String thumbnailUrl;
 
     @Ignore
     public Step(int parentRecipeId, String shortDescription, String description, String videoUrl, String thumbnailUrl) {

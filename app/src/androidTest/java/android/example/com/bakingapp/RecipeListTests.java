@@ -1,8 +1,6 @@
 package android.example.com.bakingapp;
 
 import android.example.com.bakingapp.ui.AllRecipesActivity;
-import android.example.com.bakingapp.ui.AllRecipesAdapter;
-import android.example.com.bakingapp.viewModel.AllRecipesViewModel;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.test.espresso.Espresso;
@@ -18,12 +16,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.assertion.ViewAssertions.selectedDescendantsMatch;
 import static androidx.test.espresso.matcher.ViewMatchers.isCompletelyDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withChild;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -31,12 +26,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 public class RecipeListTests {
 
     @Rule
-    public ActivityTestRule<AllRecipesActivity> mActivityTestRule =
+    public final ActivityTestRule<AllRecipesActivity> mActivityTestRule =
             new ActivityTestRule<>(AllRecipesActivity.class);
 
-    int TESTED_ITEM = 0;
+    final int TESTED_ITEM = 0;
     private IdlingResource mIdlingResource;
-    String RECIPE_NAME = "Nutella Pie";
 
     @Before
     public void registerIdlingResource(){

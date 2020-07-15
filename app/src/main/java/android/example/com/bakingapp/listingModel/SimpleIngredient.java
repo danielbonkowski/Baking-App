@@ -1,20 +1,16 @@
 package android.example.com.bakingapp.listingModel;
 
-import androidx.room.Entity;
-import androidx.room.Ignore;
-import androidx.room.PrimaryKey;
-
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
 public class SimpleIngredient implements Serializable {
 
-    private int id;
-    private double quantity;
-    private String measure;
+    private final int id;
+    private final double quantity;
+    private final String measure;
     @SerializedName("ingredient")
-    private String name;
+    private final String name;
 
     public SimpleIngredient(int id, double quantity, String measure, String name) {
         this.id = id;
@@ -34,9 +30,6 @@ public class SimpleIngredient implements Serializable {
     public String getName() {
         return name;
     }
-
-    public int getId() { return id; }
-
 
 
 }

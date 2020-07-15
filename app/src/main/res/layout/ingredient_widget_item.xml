@@ -28,7 +28,6 @@
         android:layout_height="match_parent"
         android:layout_weight="5"
         android:gravity="center"
-        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
         tools:text="grams"
         android:textSize="16sp"
@@ -42,6 +41,5 @@
         tools:text="Nutella or other chocolate-hazelnut spread"
         android:textSize="16sp"
         android:textColor="@color/colorPrimaryText"
-        android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"/>
 </LinearLayout>

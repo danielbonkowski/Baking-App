@@ -2,7 +2,6 @@ package android.example.com.bakingapp;
 
 import android.example.com.bakingapp.ui.AllRecipesActivity;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.test.espresso.Espresso;
@@ -26,19 +25,16 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withParent;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class SingleRecipeBackButtonTest {
 
     @Rule
-    public ActivityTestRule<AllRecipesActivity> mAllRecipesActivity =
+    public final ActivityTestRule<AllRecipesActivity> mAllRecipesActivity =
             new ActivityTestRule<>(AllRecipesActivity.class);
 
-    int TESTED_ITEM = 0;
+    final int TESTED_ITEM = 0;
     private IdlingResource mIdlingResource;
 
     @Before

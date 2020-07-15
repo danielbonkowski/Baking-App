@@ -1,16 +1,11 @@
 package android.example.com.bakingapp.roomModel;
 
-import android.example.com.bakingapp.listingModel.SimpleIngredient;
-import android.example.com.bakingapp.listingModel.SimpleStep;
-
 import androidx.room.ColumnInfo;
-import androidx.room.Embedded;
 import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Entity(tableName = "recipe")
 public class Recipe implements Serializable {
@@ -19,9 +14,9 @@ public class Recipe implements Serializable {
     @ColumnInfo(name = "recipe_id")
     private int recipeId;
     @ColumnInfo(name = "recipe_name")
-    private String recipeName;
-    private int servings;
-    private String image;
+    private final String recipeName;
+    private final int servings;
+    private final String image;
 
 
     public Recipe(int recipeId, String recipeName, int servings, String image) {

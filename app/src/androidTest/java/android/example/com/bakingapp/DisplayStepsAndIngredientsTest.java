@@ -1,7 +1,6 @@
 package android.example.com.bakingapp;
 
 import android.example.com.bakingapp.ui.AllRecipesActivity;
-import android.example.com.bakingapp.ui.SingleRecipeActivity;
 
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
@@ -22,19 +21,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.is;
 
+@SuppressWarnings("unchecked")
 @RunWith(AndroidJUnit4.class)
 public class DisplayStepsAndIngredientsTest {
 
     @Rule
-    public ActivityTestRule<AllRecipesActivity> mAllRecipes
+    public final ActivityTestRule<AllRecipesActivity> mAllRecipes
         = new ActivityTestRule(AllRecipesActivity.class);
 
-    int TESTED_ITEM = 1;
+    final int TESTED_ITEM = 1;
     private IdlingResource mIdlingResource;
 
 

@@ -7,11 +7,11 @@
 <TextView
     android:id="@+id/instructions_text_view"
     android:background="@drawable/gradient1"
-    android:padding="16dp"
+    android:padding="@dimen/double_padding"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:textSize="24sp"
+    android:textSize="@dimen/instructions_text_size"
     android:textColor="@color/colorPrimaryText"
     tools:text="Recipe Introduction"/>
 </FrameLayout>

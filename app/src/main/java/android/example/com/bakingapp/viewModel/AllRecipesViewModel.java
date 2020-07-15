@@ -1,7 +1,6 @@
 package android.example.com.bakingapp.viewModel;
 
 import android.app.Application;
-import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.roomModel.AppDatabase;
 import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.util.Log;
@@ -15,7 +14,7 @@ import java.util.List;
 public class AllRecipesViewModel  extends AndroidViewModel {
 
     private static final String TAG = AllRecipesViewModel.class.getSimpleName();
-    private LiveData<List<RecipeWithIngredientsAndSteps>> recipes;
+    private final LiveData<List<RecipeWithIngredientsAndSteps>> recipes;
 
     public AllRecipesViewModel(@NonNull Application application) {
         super(application);

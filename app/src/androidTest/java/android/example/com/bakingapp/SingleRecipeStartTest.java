@@ -34,11 +34,11 @@ import static org.hamcrest.Matchers.is;
 public class SingleRecipeStartTest {
 
     @Rule
-    public ActivityTestRule<AllRecipesActivity> mActivityTestRule =
+    public final ActivityTestRule<AllRecipesActivity> mActivityTestRule =
             new ActivityTestRule<>(AllRecipesActivity.class);
 
-    int TESTED_ITEM = 0;
-    String RECIPE_NAME = "Nutella Pie";
+    final int TESTED_ITEM = 0;
+    final String RECIPE_NAME = "Nutella Pie";
     private IdlingResource mIdlingResource;
 
     @Before

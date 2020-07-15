@@ -14,11 +14,11 @@ public class Ingredient implements Serializable {
     @ColumnInfo(name = "ingredient_id")
     private int ingredientId;
     @ColumnInfo(name = "parent_recipe_id")
-    private int parentRecipeId;
-    private double quantity;
-    private String measure;
+    private final int parentRecipeId;
+    private final double quantity;
+    private final String measure;
     @ColumnInfo(name = "ingredient_name")
-    private String ingredientName;
+    private final String ingredientName;
 
     public Ingredient(int ingredientId, int parentRecipeId, double quantity, String measure, String ingredientName) {
         this.ingredientId = ingredientId;

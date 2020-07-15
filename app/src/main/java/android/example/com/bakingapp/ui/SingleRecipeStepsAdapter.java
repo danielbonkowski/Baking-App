@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class SingleRecipeStepsAdapter extends RecyclerView.Adapter<SingleRecipeStepsAdapter.SingleRecipeViewHolder> {
 
-    Context mContext;
+    final Context mContext;
     private static SimpleRecipe mSimpleRecipe;
-    private OnStepListener mOnStepListener;
+    private final OnStepListener mOnStepListener;
 
     public interface OnStepListener {
         void onStepClick(int position);
@@ -62,8 +62,8 @@ public class SingleRecipeStepsAdapter extends RecyclerView.Adapter<SingleRecipeS
 
     public class SingleRecipeViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        TextView description;
-        CardView cardView;
+        final TextView description;
+        final CardView cardView;
 
         public SingleRecipeViewHolder(@NonNull View itemView) {
             super(itemView);

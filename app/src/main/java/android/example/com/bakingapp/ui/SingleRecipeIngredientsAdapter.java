@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SingleRecipeIngredientsAdapter extends RecyclerView.Adapter<SingleRecipeIngredientsAdapter.SingleRecipeIngredientsViewHolder> {
 
     SimpleRecipe mSimpleRecipe;
-    Context mContext;
+    final Context mContext;
 
     public void setSimpleRecipe(SimpleRecipe simpleRecipe){
         mSimpleRecipe = simpleRecipe;
@@ -51,11 +51,11 @@ public class SingleRecipeIngredientsAdapter extends RecyclerView.Adapter<SingleR
         return mSimpleRecipe.getIngredients().size();
     }
 
-    public class SingleRecipeIngredientsViewHolder extends RecyclerView.ViewHolder{
+    public static class SingleRecipeIngredientsViewHolder extends RecyclerView.ViewHolder{
 
-        TextView measure;
-        TextView quantity;
-        TextView ingredientName;
+        final TextView measure;
+        final TextView quantity;
+        final TextView ingredientName;
 
         public SingleRecipeIngredientsViewHolder(@NonNull View itemView) {
             super(itemView);

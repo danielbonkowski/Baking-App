@@ -41,8 +41,8 @@ dependencies {
     implementation 'androidx.databinding:databinding-runtime:4.0.0'
     implementation 'androidx.databinding:viewbinding:4.0.0'
     implementation "android.arch.lifecycle:extensions:1.1.1"
-    implementation 'org.jetbrains:annotations:15.0'
-    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+    implementation 'org.jetbrains:annotations:16.0.1'
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
     testImplementation 'junit:junit:4.13'
     implementation 'androidx.test.ext:junit:1.1.1'

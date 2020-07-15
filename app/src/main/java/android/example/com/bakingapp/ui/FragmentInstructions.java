@@ -11,8 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import java.util.regex.Pattern;
-
 public class FragmentInstructions extends Fragment {
 
     private String mInstructions;
@@ -34,7 +32,7 @@ public class FragmentInstructions extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_instructions, container, false);
 
-        TextView textView = (TextView) rootView.findViewById(R.id.instructions_text_view);
+        TextView textView = rootView.findViewById(R.id.instructions_text_view);
 
         String instructions = getInstructions();
         if(instructions != null && !instructions.isEmpty()){

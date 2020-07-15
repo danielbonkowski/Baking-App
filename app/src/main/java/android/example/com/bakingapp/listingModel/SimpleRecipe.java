@@ -6,12 +6,12 @@ import java.util.List;
 public class SimpleRecipe implements Serializable {
 
 
-    private int id;
-    private String name;
-    private List<SimpleIngredient> ingredients;
-    private List<SimpleStep> steps;
-    private int servings;
-    private String image;
+    private final int id;
+    private final String name;
+    private final List<SimpleIngredient> ingredients;
+    private final List<SimpleStep> steps;
+    private final int servings;
+    private final String image;
 
     public SimpleRecipe(int id, String name, List<SimpleIngredient> ingredients, List<SimpleStep> steps, int servings, String image) {
         this.id = id;
@@ -48,18 +48,18 @@ public class SimpleRecipe implements Serializable {
     }
 
     public String getIngredientsToString(){
-        String ingredientsString = "";
+        StringBuilder ingredientsString = new StringBuilder();
         if(ingredients != null){
 
             for(int i = 0; i < ingredients.size(); i++){
-                ingredientsString += ingredients.get(i).getName();
+                ingredientsString.append(ingredients.get(i).getName());
 
                 if(i != ingredients.size() - 1) {
-                    ingredientsString += "\n";
+                    ingredientsString.append("\n");
                 }
             }
         }
-        return ingredientsString;
+        return ingredientsString.toString();
     }
 
 }
