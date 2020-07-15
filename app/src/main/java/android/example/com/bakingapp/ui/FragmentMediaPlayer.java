@@ -55,6 +55,7 @@ public class FragmentMediaPlayer extends Fragment implements ExoPlayer.EventList
     private boolean mPlayWhenReady = true;
     private int mCurrentWindow = 0;
     private long mPlaybackPosition = 0;
+    
 
     private static final String TAG = FragmentMediaPlayer.class.getSimpleName();
 
@@ -80,17 +81,24 @@ public class FragmentMediaPlayer extends Fragment implements ExoPlayer.EventList
     private void initializePlayer(){
         if(mPlayer == null && mVideoUrl != null && !mVideoUrl.isEmpty()){
             Uri uri = Uri.parse(mVideoUrl);
-            TrackSelector trackSelector = new DefaultTrackSelector(getContext());
-            LoadControl loadControl = new DefaultLoadControl();
-            mPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
-            mPlayerView.setPlayer(mPlayer);
             String userAgent = Util.getUserAgent(getContext(), "BakingApp");
             MediaSource mediaSource = new ExtractorMediaSource(uri,
                     new DefaultDataSourceFactory(getContext(), userAgent), new DefaultExtractorsFactory(),
                     null, null);
+
+            TrackSelector trackSelector = new DefaultTrackSelector(getContext());
+            LoadControl loadControl = new DefaultLoadControl();
+
+            mPlayer = ExoPlayerFactory.newSimpleInstance(getContext(), trackSelector, loadControl);
+            mPlayer.setPlayWhenReady(mPlayWhenReady);
+            mCurrentWindow = mPlayer.getCurrentWindowIndex();
+            mPlayer.seekTo(mCurrentWindow, mPlaybackPosition);
             mPlayer.addListener(this);
             mPlayer.prepare(mediaSource);
-            mPlayer.setPlayWhenReady(true);
+            mPlayerView.setPlayer(mPlayer);
+
+
+
         }
     }
 
@@ -137,36 +145,24 @@ public class FragmentMediaPlayer extends Fragment implements ExoPlayer.EventList
     @Override
     public void onStart() {
         super.onStart();
-        if(Util.SDK_INT >= 24){
-            initializeMediaSession();
-            initializePlayer();
-        }
+        initializeMediaSession();
+        initializePlayer();
     }
 
 
     @Override
     public void onResume() {
         super.onResume();
-        if(Util.SDK_INT < 24 || mPlayer == null){
+        if(mPlayer == null){
             initializeMediaSession();
             initializePlayer();
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        if(Util.SDK_INT <24){
-            releasePlayer();
-        }
-    }
-
-    @Override
     public void onStop() {
         super.onStop();
-        if(Util.SDK_INT >=24){
-            releasePlayer();
-        }
+        releasePlayer();
     }
 
 

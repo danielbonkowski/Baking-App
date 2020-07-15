@@ -4,7 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.RecipeUtilities;
+import android.example.com.bakingapp.utilities.RecipeUtilities;
 import android.example.com.bakingapp.listingModel.SimpleIngredient;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.util.Log;

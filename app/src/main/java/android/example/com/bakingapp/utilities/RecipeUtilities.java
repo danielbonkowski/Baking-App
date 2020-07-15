@@ -1,6 +1,7 @@
-package android.example.com.bakingapp;
+package android.example.com.bakingapp.utilities;
 
 import android.content.Context;
+import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 
 public class RecipeUtilities {

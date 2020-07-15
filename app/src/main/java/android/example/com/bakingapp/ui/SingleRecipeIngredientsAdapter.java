@@ -2,7 +2,7 @@ package android.example.com.bakingapp.ui;
 
 import android.content.Context;
 import android.example.com.bakingapp.R;
-import android.example.com.bakingapp.RecipeUtilities;
+import android.example.com.bakingapp.utilities.RecipeUtilities;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.view.LayoutInflater;
 import android.view.View;

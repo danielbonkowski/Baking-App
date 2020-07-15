@@ -1,20 +1,17 @@
 package android.example.com.bakingapp.network;
 
 import android.content.Context;
-import android.example.com.bakingapp.IdlingResource.SimpleIdlingResource;
+import android.example.com.bakingapp.idlingResource.SimpleIdlingResource;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.roomModel.AppDatabase;
 import android.example.com.bakingapp.listingModel.SimpleIngredient;
 import android.example.com.bakingapp.listingModel.SimpleStep;
 import android.example.com.bakingapp.roomModel.Ingredient;
 import android.example.com.bakingapp.roomModel.Recipe;
-import android.example.com.bakingapp.roomModel.RecipeWithIngredientsAndSteps;
 import android.example.com.bakingapp.roomModel.Step;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.LiveData;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 

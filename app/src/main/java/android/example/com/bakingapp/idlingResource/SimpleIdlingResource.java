@@ -1,4 +1,4 @@
-package android.example.com.bakingapp.IdlingResource;
+package android.example.com.bakingapp.idlingResource;
 
 import androidx.test.espresso.IdlingResource;
 

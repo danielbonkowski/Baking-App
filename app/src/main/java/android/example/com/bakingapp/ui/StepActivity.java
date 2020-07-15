@@ -1,7 +1,6 @@
 package android.example.com.bakingapp.ui;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -29,7 +28,7 @@ public class StepActivity extends AppCompatActivity {
 
     int mPosition;
     SimpleRecipe mSimpleRecipe;
-    boolean mIsConnectedToInternet;
+    boolean mIsConnectedToInternet = true;
 
 
     @Override
@@ -52,7 +51,7 @@ public class StepActivity extends AppCompatActivity {
         }
         Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
 
-        addFragmentsAsynchronously();
+        addFragments();
         addPreviousButtonClickListener();
         addNextButtonClickListener();
 
@@ -67,7 +66,7 @@ public class StepActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        addFragments();
+
                     }
                 });
 
@@ -115,17 +114,8 @@ public class StepActivity extends AppCompatActivity {
 
         String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && videoUrl != null
-                && !videoUrl.isEmpty() && mIsConnectedToInternet){
+        if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
-            FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
-            fragmentMediaPlayer.setVideoUrl(videoUrl);
-            fragmentManager.beginTransaction()
-                    .add(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
-                    .commit();
-
-        }else if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M &&
-                videoUrl != null && !videoUrl.isEmpty()){
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);
             fragmentManager.beginTransaction()
@@ -143,11 +133,15 @@ public class StepActivity extends AppCompatActivity {
     }
 
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
+
     private boolean isConnectedToInternet(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager == null){
             return false;
+        }
+
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
+            return true;
         }
 
         Network network = connectivityManager.getActiveNetwork();

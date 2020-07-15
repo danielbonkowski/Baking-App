@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
-import android.example.com.bakingapp.IdlingResource.SimpleIdlingResource;
+import android.example.com.bakingapp.idlingResource.SimpleIdlingResource;
 import android.example.com.bakingapp.widget.BakingService;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
