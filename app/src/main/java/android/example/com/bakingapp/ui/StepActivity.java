@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.network.AppExecutors;
+import android.example.com.bakingapp.network.NetworkUtils;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
@@ -51,7 +52,7 @@ public class StepActivity extends AppCompatActivity {
         }
         Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
 
-        addFragments();
+        addFragmentsAsynchronously();
         addPreviousButtonClickListener();
         addNextButtonClickListener();
 
@@ -62,11 +63,11 @@ public class StepActivity extends AppCompatActivity {
         AppExecutors.getInstance().networkIO().execute(new Runnable() {
             @Override
             public void run() {
-                mIsConnectedToInternet = isConnectedToInternet();
+                mIsConnectedToInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-
+                        addFragments();
                     }
                 });
 
@@ -132,22 +133,6 @@ public class StepActivity extends AppCompatActivity {
 
     }
 
-
-
-    private boolean isConnectedToInternet(){
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager == null){
-            return false;
-        }
-
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M){
-            return true;
-        }
-
-        Network network = connectivityManager.getActiveNetwork();
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return network != null && networkInfo.isConnected();
-    }
 
     private void replaceFragments(){
         FragmentManager fragmentManager = getSupportFragmentManager();

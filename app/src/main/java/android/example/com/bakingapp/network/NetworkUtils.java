@@ -9,6 +9,9 @@ import android.example.com.bakingapp.listingModel.SimpleStep;
 import android.example.com.bakingapp.roomModel.Ingredient;
 import android.example.com.bakingapp.roomModel.Recipe;
 import android.example.com.bakingapp.roomModel.Step;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -134,6 +137,22 @@ public class NetworkUtils {
             }
         });
 
+    }
+
+    public static boolean isConnectedToInternet(Context context){
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if(connectivityManager == null){
+            return false;
+        }
+
+        Network network = connectivityManager.getActiveNetwork();
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if(network == null || networkInfo == null){
+            return false;
+        }
+
+        return networkInfo.isConnected();
     }
 
 }

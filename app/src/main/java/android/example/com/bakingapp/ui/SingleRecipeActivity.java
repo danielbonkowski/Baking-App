@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
+import android.example.com.bakingapp.network.NetworkUtils;
 import android.example.com.bakingapp.widget.BakingService;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
@@ -18,6 +19,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
     public static final String INTENT_EXTRA_STEP_RECIPE = "selected_step_recipe";
     private static final int FIRST_STEP_POSITION = 0;
     TextView mSingleTextView;
+    boolean mIsConnectedToInternet = true;
 
     private boolean mTwoPane;
 
@@ -25,6 +27,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_recipe);
+        mIsConnectedToInternet =  NetworkUtils.isConnectedToInternet(getApplicationContext());
 
         if(findViewById(R.id.double_pane_constraint_layout) != null){
             mTwoPane = true;
@@ -78,7 +81,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
 
 
                 String videoUrl = simpleRecipe.getSteps().get(FIRST_STEP_POSITION).getVideoUrl();
-                if(videoUrl != null && !videoUrl.isEmpty()){
+                if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
                     FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
                     fragmentMediaPlayer.setVideoUrl(videoUrl);
@@ -129,7 +132,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
                 .commit();
 
         String videoUrl = simpleRecipe.getSteps().get(position).getVideoUrl();
-        if(videoUrl != null && !videoUrl.isEmpty()){
+        if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);

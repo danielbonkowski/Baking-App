@@ -160,8 +160,8 @@ public class FragmentMediaPlayer extends Fragment implements ExoPlayer.EventList
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onPause() {
+        super.onPause();
         releasePlayer();
     }
 
