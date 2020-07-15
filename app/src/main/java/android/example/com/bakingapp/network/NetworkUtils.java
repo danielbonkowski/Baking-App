@@ -85,7 +85,7 @@ public class NetworkUtils {
                             }
 
                             if(recipe == null){
-                                Log.d(TAG, "Recipe Live Data is null, mySipmleRecipes size: " + mySimpleRecipes.size());
+                                Log.d(TAG, "Recipe Live Data is null, mySimpleRecipes size: " + mySimpleRecipes.size());
                                 mDb.recipeDao().insertRecipe(new Recipe(simpleRecipe.getId(), simpleRecipe.getName(),
                                         simpleRecipe.getServings(), simpleRecipe.getImage()));
 

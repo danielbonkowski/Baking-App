@@ -20,11 +20,7 @@ public class BakingService extends IntentService {
             "serialized_recipe";
     private static final String TAG = BakingService.class.getSimpleName();
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
-     * @param name Used to name the worker thread, important only for debugging.
-     */
+
     public BakingService() {
         super("BakingService");
     }
