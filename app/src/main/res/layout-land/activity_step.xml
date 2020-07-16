@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/horizontal_player">
+
+    <FrameLayout
+        android:id="@+id/media_player_or_graphic_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:id="@+id/horizontal_player">
+        tools:text="Media Player" />
 
+    <FrameLayout
+        android:id="@+id/ingredients_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        tools:text="Ingredients" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:baselineAligned="false">
         <FrameLayout
-            android:id="@+id/media_player_or_graphic_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:text="Media Player" />
-
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+            <Button
+                android:background="@drawable/gradient3"
+                android:id="@+id/button_previous"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_previous"
+                android:padding="@dimen/default_padding"
+                android:textColor="@color/colorTextIcons"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_gravity="center"/>
+        </FrameLayout>
         <FrameLayout
-            android:id="@+id/ingredients_container"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            tools:text="Ingredients" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:baselineAligned="false">
-            <FrameLayout
-                android:layout_width="0dp"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/button_next"
+                android:background="@drawable/gradient3"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <Button
-                    android:background="@drawable/gradient3"
-                    android:id="@+id/button_previous"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/button_previous"
-                    android:padding="@dimen/default_padding"
-                    android:textColor="@color/colorTextIcons"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_gravity="center"/>
-            </FrameLayout>
-            <FrameLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1">
-                <Button
-                    android:id="@+id/button_next"
-                    android:background="@drawable/gradient3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/button_next"
-                    android:padding="@dimen/default_padding"
-                    android:textColor="@color/colorTextIcons"
-                    android:layout_gravity="center"/>
-            </FrameLayout>
-
-        </LinearLayout>
+                android:text="@string/button_next"
+                android:padding="@dimen/default_padding"
+                android:textColor="@color/colorTextIcons"
+                android:layout_gravity="center"/>
+        </FrameLayout>
 
     </LinearLayout>
+
+</LinearLayout>
 
