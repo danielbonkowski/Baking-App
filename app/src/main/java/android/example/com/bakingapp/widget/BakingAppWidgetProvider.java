@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.example.com.bakingapp.R;
 import android.example.com.bakingapp.listingModel.SimpleRecipe;
 import android.example.com.bakingapp.ui.AllRecipesActivity;
+import android.example.com.bakingapp.ui.SingleRecipeActivity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -105,7 +106,7 @@ public class BakingAppWidgetProvider extends AppWidgetProvider {
         Bundle bundle = new Bundle();
         bundle.putSerializable(AllRecipesActivity.INTENT_EXTRA_RECIPE, simpleRecipe);
 
-        Intent recipeUpdateIntent = new Intent(context, AllRecipesActivity.class);
+        Intent recipeUpdateIntent = new Intent(context, SingleRecipeActivity.class);
         recipeUpdateIntent.setAction(BakingService.ACTION_UPDATE_RECIPE);
         recipeUpdateIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         recipeUpdateIntent.putExtras(bundle);

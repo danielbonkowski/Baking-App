@@ -20,6 +20,14 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
     private boolean mTwoPane;
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, AllRecipesActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_recipe);

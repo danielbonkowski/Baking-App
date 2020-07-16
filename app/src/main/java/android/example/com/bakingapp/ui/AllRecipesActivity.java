@@ -49,14 +49,6 @@ FragmentAllRecipes.OnRecipeClickListener,
                     .add(R.id.recipes_container, fragmentAllRecipes)
                     .commit();
         }
-
-        if(widgetIntent != null && BakingService.ACTION_UPDATE_RECIPE.equals(widgetIntent.getAction())){
-
-            SimpleRecipe simpleRecipe = (SimpleRecipe) widgetIntent.getSerializableExtra(INTENT_EXTRA_RECIPE);
-            if(simpleRecipe != null){
-                startRecipeDetailsActivity(simpleRecipe);
-            }
-        }
     }
 
     @Override

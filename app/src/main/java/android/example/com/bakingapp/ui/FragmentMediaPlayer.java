@@ -150,6 +150,11 @@ public class FragmentMediaPlayer extends Fragment implements ExoPlayer.EventList
 
 
     @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
         if((playbackState == ExoPlayer.STATE_READY) && playWhenReady){
             mPlaybackStateBuilder.setState(PlaybackStateCompat.STATE_PLAYING,
