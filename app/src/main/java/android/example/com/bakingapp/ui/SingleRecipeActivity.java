@@ -1,5 +1,6 @@
 package android.example.com.bakingapp.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
@@ -14,10 +15,15 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
 
     public static final String INTENT_EXTRA_STEP_POSITION = "selected_step_position";
     public static final String INTENT_EXTRA_STEP_RECIPE = "selected_step_recipe";
+    private static final String MEDIA_PLAYER_FRAGMENT = "media_player_fragment";
+    private static final String STEP_POSITION = "step_position";
     private static final int FIRST_STEP_POSITION = 0;
     boolean mIsConnectedToInternet = true;
+    int mPosition;
+
 
     private boolean mTwoPane;
+    private FragmentMediaPlayer mFragmentMediaPlayer;
 
     @Override
     public void onBackPressed() {
@@ -34,32 +40,51 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
         mIsConnectedToInternet =  NetworkUtils.isConnectedToInternet(getApplicationContext());
 
         mTwoPane = findViewById(R.id.double_pane_constraint_layout) != null;
+
         Intent receivedIntent = getIntent();
+        if(receivedIntent == null){
+            return;
+        }
 
-        if(!mTwoPane && receivedIntent != null){
+        SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
+        if(simpleRecipe == null){
+            return;
+        }
 
-            SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
-            FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+
+        if(!mTwoPane && savedInstanceState == null){
             addSingleStepFragment(simpleRecipe, fragmentManager);
 
-        }else if (receivedIntent != null){
-
-            SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
-            if(simpleRecipe == null){
-                return;
-            }
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-
+        }else if (savedInstanceState == null){
             addSingleStepFragment(simpleRecipe, fragmentManager);
-            addIngredientsFragment(simpleRecipe, fragmentManager);
+            addIngredientsFragment(simpleRecipe, fragmentManager, FIRST_STEP_POSITION);
+            addMediaPlayerOrGraphicFragment(simpleRecipe, fragmentManager);
 
-            String videoUrl = simpleRecipe.getSteps().get(FIRST_STEP_POSITION).getVideoUrl();
-            if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
-                addMediaPlayerFragment(fragmentManager, videoUrl);
-            }else{
-                addCookingGraphicFragment(fragmentManager);
-            }
+        }else if(mTwoPane){
+            refreshFragments(savedInstanceState, simpleRecipe, fragmentManager);
+        }
+    }
+
+    private void refreshFragments(Bundle savedInstanceState, SimpleRecipe simpleRecipe, FragmentManager fragmentManager) {
+        mFragmentMediaPlayer = (FragmentMediaPlayer) getSupportFragmentManager().getFragment(savedInstanceState, MEDIA_PLAYER_FRAGMENT);
+        mPosition = savedInstanceState.getInt(STEP_POSITION);
+        if(mFragmentMediaPlayer != null){
+            replaceMediaPlayerFragment(mFragmentMediaPlayer, fragmentManager);
+        }
+
+        addSingleStepFragment(simpleRecipe, fragmentManager);
+        addIngredientsFragment(simpleRecipe, fragmentManager, mPosition);
+    }
+
+    private void addMediaPlayerOrGraphicFragment(SimpleRecipe simpleRecipe, FragmentManager fragmentManager) {
+        String videoUrl = simpleRecipe.getSteps().get(FIRST_STEP_POSITION).getVideoUrl();
+        if(mFragmentMediaPlayer != null && mIsConnectedToInternet){
+
+        }else if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
+            addMediaPlayerFragment(fragmentManager, videoUrl);
+        }else{
+            addCookingGraphicFragment(fragmentManager);
         }
     }
 
@@ -70,18 +95,25 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
                 .commit();
     }
 
+    private void replaceMediaPlayerFragment(FragmentMediaPlayer fragmentMediaPlayer, FragmentManager fragmentManager) {
+        fragmentManager.beginTransaction()
+                .replace(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
+                .commit();
+    }
+
     private void addMediaPlayerFragment(FragmentManager fragmentManager, String videoUrl) {
         FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
         fragmentMediaPlayer.setVideoUrl(videoUrl);
+        mFragmentMediaPlayer = fragmentMediaPlayer;
         fragmentManager.beginTransaction()
                 .add(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
                 .commit();
     }
 
-    private void addIngredientsFragment(SimpleRecipe simpleRecipe, FragmentManager fragmentManager) {
+    private void addIngredientsFragment(SimpleRecipe simpleRecipe, FragmentManager fragmentManager, int position) {
         FragmentInstructions fragmentInstructions = new FragmentInstructions();
-        fragmentInstructions.setInstructions(simpleRecipe.getSteps().get(FIRST_STEP_POSITION).getDescription());
-        fragmentInstructions.setStep(FIRST_STEP_POSITION);
+        fragmentInstructions.setInstructions(simpleRecipe.getSteps().get(position).getDescription());
+        fragmentInstructions.setStep(position);
         fragmentManager.beginTransaction()
                 .add(R.id.ingredients_container, fragmentInstructions)
                 .commit();
@@ -113,6 +145,7 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
             intent.putExtras(bundle);
             startActivity(intent);
         }else{
+            mPosition = position;
             replaceFragments(position, simpleRecipe);
         }
 
@@ -129,6 +162,8 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
                 .commit();
 
         String videoUrl = simpleRecipe.getSteps().get(position).getVideoUrl();
+
+
         if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
@@ -144,5 +179,15 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
                     .commit();
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STEP_POSITION, mPosition);
+        FragmentMediaPlayer fragmentMediaPlayer = (FragmentMediaPlayer) getSupportFragmentManager().findFragmentByTag(MEDIA_PLAYER_FRAGMENT);
+        if(mFragmentMediaPlayer != null && fragmentMediaPlayer != null){
+            getSupportFragmentManager().putFragment(outState, MEDIA_PLAYER_FRAGMENT, mFragmentMediaPlayer);
+        }
     }
 }
