@@ -19,10 +19,12 @@ public class StepActivity extends AppCompatActivity {
 
     private static final String SIMPLE_RECIPE_KEY = "simple_recipe";
     private static final String POSITION_KEY = "position";
+    private static final String MEDIA_PLAYER_FRAGMENT = "media_player_fragment";
 
     int mPosition;
     SimpleRecipe mSimpleRecipe;
     boolean mIsConnectedToInternet = true;
+    FragmentMediaPlayer mFragmentMediaPlayer;
 
 
     @Override
@@ -37,17 +39,22 @@ public class StepActivity extends AppCompatActivity {
             mPosition = (int) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_POSITION);
             mSimpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(SingleRecipeActivity.INTENT_EXTRA_STEP_RECIPE);
 
-
+            addFragmentsAsynchronously();
+            addPreviousButtonClickListener();
+            addNextButtonClickListener();
 
         }else if(savedInstanceState != null){
             mPosition = savedInstanceState.getInt(POSITION_KEY);
             mSimpleRecipe = (SimpleRecipe) savedInstanceState.getSerializable(SIMPLE_RECIPE_KEY);
+            mFragmentMediaPlayer = (FragmentMediaPlayer) getSupportFragmentManager().getFragment(savedInstanceState, MEDIA_PLAYER_FRAGMENT);
+
+            replaceFragmentsAsynchronously();
+            addPreviousButtonClickListener();
+            addNextButtonClickListener();
         }
         Log.d(TAG,  "Video URL: " + mSimpleRecipe.getSteps().get(mPosition).getVideoUrl());
 
-        addFragmentsAsynchronously();
-        addPreviousButtonClickListener();
-        addNextButtonClickListener();
+
 
         setTitle(mSimpleRecipe.getName());
     }
@@ -56,6 +63,14 @@ public class StepActivity extends AppCompatActivity {
         AppExecutors.getInstance().networkIO().execute(() -> {
             mIsConnectedToInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
             runOnUiThread(() -> addFragments());
+
+        });
+    }
+
+    private void replaceFragmentsAsynchronously(){
+        AppExecutors.getInstance().networkIO().execute(() -> {
+            mIsConnectedToInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
+            runOnUiThread(() -> replaceFragments());
 
         });
     }
@@ -98,6 +113,7 @@ public class StepActivity extends AppCompatActivity {
 
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);
+            mFragmentMediaPlayer = fragmentMediaPlayer;
             fragmentManager.beginTransaction()
                     .add(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
                     .commit();
@@ -124,10 +140,17 @@ public class StepActivity extends AppCompatActivity {
                 .commit();
 
         String videoUrl = mSimpleRecipe.getSteps().get(mPosition).getVideoUrl();
-        if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
+        if(mFragmentMediaPlayer != null && mIsConnectedToInternet){
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.media_player_or_graphic_container, mFragmentMediaPlayer)
+                    .commit();
+
+        }else if(videoUrl != null && !videoUrl.isEmpty() && mIsConnectedToInternet){
 
             FragmentMediaPlayer fragmentMediaPlayer = new FragmentMediaPlayer();
             fragmentMediaPlayer.setVideoUrl(videoUrl);
+            mFragmentMediaPlayer = fragmentMediaPlayer;
             fragmentManager.beginTransaction()
                     .replace(R.id.media_player_or_graphic_container, fragmentMediaPlayer)
                     .commit();
@@ -146,5 +169,7 @@ public class StepActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
         outState.putSerializable( SIMPLE_RECIPE_KEY, mSimpleRecipe);
         outState.putInt(POSITION_KEY, mPosition);
+
+        getSupportFragmentManager().putFragment(outState, MEDIA_PLAYER_FRAGMENT, mFragmentMediaPlayer);
     }
 }
