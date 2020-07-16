@@ -42,18 +42,14 @@ public class SingleRecipeActivity extends AppCompatActivity  implements Fragment
         mTwoPane = findViewById(R.id.double_pane_constraint_layout) != null;
 
         Intent receivedIntent = getIntent();
-        if(receivedIntent == null){
-            return;
-        }
+
 
         SimpleRecipe simpleRecipe = (SimpleRecipe) receivedIntent.getSerializableExtra(AllRecipesActivity.INTENT_EXTRA_RECIPE);
-        if(simpleRecipe == null){
-            return;
-        }
+
 
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        if(!mTwoPane && savedInstanceState == null){
+        if(!mTwoPane){
             addSingleStepFragment(simpleRecipe, fragmentManager);
 
         }else if (savedInstanceState == null){
