@@ -15,6 +15,7 @@ import android.net.NetworkInfo;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.room.Room;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +33,22 @@ public class NetworkUtils {
 
     private static final String RECIPE_LISTING_URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/";
     private static AppDatabase mDb;
+    private static JsonRecipeListingApi mJsonRecipeListingApi;
+    private static Object LOCK = new Object();
+
+    private static JsonRecipeListingApi getJsonRecipeListingApi(){
+        if(mJsonRecipeListingApi == null){
+            synchronized (LOCK){
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(RECIPE_LISTING_URL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                mJsonRecipeListingApi = retrofit.create(JsonRecipeListingApi.class);
+            }
+        }
+        return mJsonRecipeListingApi;
+    }
 
     public interface DownloaderCallback{
         void onDownloaded(boolean isFinished);
@@ -46,14 +63,7 @@ public class NetworkUtils {
 
         mDb = AppDatabase.getInstance(context);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(RECIPE_LISTING_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        JsonRecipeListingApi jsonRecipeListingApi = retrofit.create(JsonRecipeListingApi.class);
-
-        Call<List<SimpleRecipe>> call = jsonRecipeListingApi.getRecipes();
+        Call<List<SimpleRecipe>> call = getJsonRecipeListingApi().getRecipes();
 
         call.enqueue(new Callback<List<SimpleRecipe>>() {
             @Override
@@ -71,18 +81,7 @@ public class NetworkUtils {
 
                     for(SimpleRecipe simpleRecipe : mySimpleRecipes){
 
-
                         Recipe recipe = mDb.recipeDao().getRecipe(simpleRecipe.getId());
-
-
-
-
-                        if(recipe == null){
-                            Log.d(TAG, "Recipe id: " + simpleRecipe.getId() + " is not in db");
-                        }else{
-                            Log.d(TAG, "Recipe id: " + recipe.getRecipeId() + " is in db");
-                            Log.d(TAG, "Recipe id to insert: " + simpleRecipe.getId());
-                        }
 
                         if(recipe == null){
                             Log.d(TAG, "Recipe Live Data is null, mySimpleRecipes size: " + mySimpleRecipes.size());
