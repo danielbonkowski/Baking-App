@@ -10,6 +10,7 @@ with detailed steps on how to make them.
 * Room to store the fetched data locally
 * LiveData to automatically update the application state
 * ViewModel to preserve the application state after activity destruction
+* Exoplayer to playback cooking instructions
 * Widget to present users with the ingredients of the most recently searched recipe
 * Espresso tests of User Interface
 
