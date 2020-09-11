@@ -4,7 +4,7 @@ This project was created for the Udacity Android Developer Nanodegree course.
 The purpose of this app is to present users with various cooking recipes along
 with detailed steps on how to make them. 
 
-##This app utilizes:
+## This app utilizes:
 
 * Retrofit library to fetch data from a remote endpoint
 * Room to store the fetched data locally
