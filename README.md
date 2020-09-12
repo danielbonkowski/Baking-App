@@ -18,3 +18,7 @@ with detailed steps on how to make them.
 
 The app is usable both on physical tablets and mobile phones, as well as on Android Emulator.
 No additional configuration is necessary.
+
+## License
+
+The contents of this repository are covered under the [MIT License](./LICENSE.md).
